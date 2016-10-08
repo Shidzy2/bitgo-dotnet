@@ -1,0 +1,48 @@
+{
+    "version": "0.0.1-*",
+    "title": "BitGo API Client",
+    "description": "BitGo API Client Class Library",
+    "authors": [
+        "PlayHub"
+    ],
+    "copyright": "Copyright © PlayHub 2016",
+    "packOptions": {
+        "iconUrl": "https://www.bitgo.com/api/images/logo.png",
+        "projectUrl": "https://github.com/playhubdev/bitgo-dotnet",
+        "licenseUrl": "https://raw.githubusercontent.com/playhubdev/bitgo-dotnet/master/LICENSE.txt",
+        "releaseNotes": "Initial Version",
+        "tags": [
+            "BitGo",
+            "Bitcoin",
+            "Api",
+            "SDK"
+        ],
+        "repository": {
+            "type": "git",
+            "url": "https://github.com/playhubdev/bitgo-dotnet.git"
+        }
+    },
+    "frameworks": {
+        "netstandard1.6": {
+            "dependencies": {
+                "NETStandard.Library": "1.6.0",
+                "System.Security.SecureString": "4.0.0"
+            },
+            "imports": [
+                "dnxcore50",
+                "portable-net45+win8"
+            ]
+        },
+        "net45": {
+            "System.Threading.Tasks": ""
+        }
+    },
+    "dependencies": {
+        "NBitcoin": "3.0.0.9",
+        "Newtonsoft.Json": "9.0.1",
+        "Microsoft.Net.Http": "2.2.29"
+    },
+    "buildOptions": {
+        "xmlDoc": true
+    }
+}
