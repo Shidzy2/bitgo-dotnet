@@ -1,10 +1,10 @@
 using System;
 using Newtonsoft.Json;
 
-namespace BitGo.Types.Keychain {
+namespace BitGo.Types {
     
     [JsonObject(MemberSerialization.OptIn)]
-    public class Keychain: PagedResult {
+    public class Keychain {
 
         [JsonProperty("xpub", Required = Required.Always)]
         public string ExtendedPublicKey { get; internal set; }

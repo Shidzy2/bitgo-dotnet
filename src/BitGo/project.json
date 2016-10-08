@@ -26,14 +26,15 @@
         "netstandard1.6": {
             "dependencies": {
                 "NETStandard.Library": "1.6.0",
-                "System.Security.SecureString": "4.0.0"
+                "System.Security.SecureString": "4.0.0",
+                "System.Security.Cryptography.Algorithms": "4.2.0"
             },
             "imports": [
                 "dnxcore50",
                 "portable-net45+win8"
             ]
         },
-        "net45": {
+        "net461": {
             "System.Threading.Tasks": ""
         }
     },

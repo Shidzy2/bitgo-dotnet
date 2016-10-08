@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace BitGo.Args.Keychain {
+namespace BitGo.Args {
     
     [JsonObject(MemberSerialization.OptIn)]
     internal class AddKeychainArgs {

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using BitGo;
+using Microsoft.Extensions.Configuration;
 
 namespace ConsoleApplication
 {
@@ -8,16 +10,16 @@ namespace ConsoleApplication
     {
         public static void Main(string[] args)
         {
-            RunAsync().Wait();
-            // string json = @"";//JSON string from sjcl
-            // string password = "";//password string
-            // SJCLDecryptor sd = new SJCLDecryptor(json, password);
-            // string decodedString = sd.Plaintext;
-            // Console.WriteLine(decodedString);
+            var builder = new ConfigurationBuilder()
+                                .SetBasePath(Directory.GetCurrentDirectory())
+                                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                                .AddUserSecrets();
+            RunAsync(builder.Build()).Wait();
         }
 
-        private static async Task RunAsync() {
-            var bitGoClient = new BitGoClient(BitGoNetwork.Main, "");
+        private static async Task RunAsync(IConfigurationRoot configuration) {
+            var bitGoClient = new BitGoClient(BitGoNetwork.Main, configuration["Token"]);
+            
             var keychains = await bitGoClient.Keychains.GetListAsync(10);
             Console.WriteLine(keychains.Start);
             Console.WriteLine(keychains.Count);

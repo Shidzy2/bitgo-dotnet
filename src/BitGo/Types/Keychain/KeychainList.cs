@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace BitGo.Types.Keychain {
+namespace BitGo.Types {
     
     [JsonObject(MemberSerialization.OptIn)]
     public class KeychainList: PagedResult {

@@ -14,6 +14,9 @@ using System.Runtime.InteropServices;
 using NBitcoin;
 using BitGo.Helpers.Sjcl;
 using System.Net.Http.Headers;
+using System.Security.Cryptography;
+using BitGo.Exceptions;
+using BitGo.Services;
 
 namespace BitGo
 {
@@ -77,6 +80,11 @@ namespace BitGo
             return sd.Plaintext;
         }
 
+        internal string Encrypt(string input, string password)
+        {
+            throw new NotImplementedException();
+        }
+
 
         internal HttpClient GetHttpClient(bool authenticated = true)
         {
@@ -109,7 +117,14 @@ namespace BitGo
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception(content, ex);
+                    switch(response.StatusCode) {
+                        case HttpStatusCode.Unauthorized:
+                            throw new UnauthorizedException(content, ex);
+                        case HttpStatusCode.NotFound:
+                            throw new NotFoundException(content, ex);
+                        default:
+                            throw new Exception(content, ex);
+                    }
                 }
             }
         }
@@ -130,7 +145,14 @@ namespace BitGo
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception(content, ex);
+                    switch(response.StatusCode) {
+                        case HttpStatusCode.Unauthorized:
+                            throw new UnauthorizedException(content, ex);
+                        case HttpStatusCode.NotFound:
+                            throw new NotFoundException(content, ex);
+                        default:
+                            throw new Exception(content, ex);
+                    }
                 }
             }
         }
@@ -151,12 +173,19 @@ namespace BitGo
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception(content, ex);
+                    switch(response.StatusCode) {
+                        case HttpStatusCode.Unauthorized:
+                            throw new UnauthorizedException(content, ex);
+                        case HttpStatusCode.NotFound:
+                            throw new NotFoundException(content, ex);
+                        default:
+                            throw new Exception(content, ex);
+                    }
                 }
             }
         }
 
-        static SecureString ConvertToSecureString(string str)
+        internal SecureString ConvertToSecureString(string str)
         {
             var secureStr = new SecureString();
             if (str.Length > 0)
@@ -166,7 +195,7 @@ namespace BitGo
             return secureStr;
         }
 
-        static string ConvertToString(SecureString secStr)
+        internal string ConvertToString(SecureString secStr)
         {
             IntPtr unmanagedString = IntPtr.Zero;
             try
