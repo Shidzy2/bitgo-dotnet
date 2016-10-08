@@ -38,7 +38,9 @@ namespace BitGo
         private readonly SecureString _token;
         private readonly BitGoNetwork _network;
 
-        private readonly KeychainService _keychainService;
+        private readonly IKeychainService _keychainService;
+
+        private readonly IWalletService _walletService;
 
         internal Network Network
         {
@@ -48,11 +50,19 @@ namespace BitGo
             }
         }
 
-        public KeychainService Keychains
+        public IKeychainService Keychains
         {
             get
             {
                 return _keychainService;
+            }
+        }
+
+        public IWalletService Wallets
+        {
+            get
+            {
+                return _walletService;
             }
         }
 
@@ -70,17 +80,18 @@ namespace BitGo
                 _token = ConvertToSecureString(token);
             }
             _keychainService = new KeychainService(this);
+            _walletService = new WalletService(this);
         }
 
 
 
-        internal string Decrypt(string input, string password)
+        public string Decrypt(string input, string password)
         {
             SjclDecryptor sd = new SjclDecryptor(input, password);
             return sd.Plaintext;
         }
 
-        internal string Encrypt(string input, string password)
+        public string Encrypt(string input, string password)
         {
             throw new NotImplementedException();
         }

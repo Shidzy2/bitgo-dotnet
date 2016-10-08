@@ -19,16 +19,13 @@ namespace BitGo.Services
         public Task<Keychain> GetAsync(string extendedPublicKey, CancellationToken cancellationToken = default(CancellationToken)) 
             => _client.PostAsync<Keychain>($"{_url}/{extendedPublicKey}", null, cancellationToken);
 
-        private Task<T> AddAsync<T>(string extendedPublicKey, string encryptedExtendedPrivateKey = null, CancellationToken cancellationToken = default(CancellationToken))  where T: new() 
-            => _client.PostAsync<T>($"{_url}", new AddKeychainArgs { ExtendedPublicKey = extendedPublicKey, EncryptedExtendedPrivateKey = encryptedExtendedPrivateKey }, cancellationToken);
+        public Task<Keychain> AddAsync(string extendedPublicKey, string encryptedExtendedPrivateKey = null, CancellationToken cancellationToken = default(CancellationToken)) 
+            => _client.PostAsync<Keychain>($"{_url}", new AddKeychainArgs { ExtendedPublicKey = extendedPublicKey, EncryptedExtendedPrivateKey = encryptedExtendedPrivateKey }, cancellationToken);
 
-        public Task<Keychain> AddAsync(string extendedPublicKey, string encryptedExtendedPrivateKey = null, CancellationToken cancellationToken = default(CancellationToken)) =>
-            AddAsync<Keychain>(extendedPublicKey, encryptedExtendedPrivateKey, cancellationToken);
-
-        public async Task<PrivateKeychain> CreateAsync(string passphrase, string seedHex = null, CancellationToken cancellationToken = default(CancellationToken)) {
+        public async Task<Keychain> CreateAsync(string passphrase, string seedHex = null, CancellationToken cancellationToken = default(CancellationToken)) {
             var extKey = seedHex == null ? new ExtKey() : new ExtKey(seedHex);
             var extKeyStr = extKey.ToString(_client.Network);
-            var keychain = await AddAsync<PrivateKeychain>(extKey.Neuter().ToString(_client.Network), _client.Encrypt(extKeyStr, passphrase), cancellationToken);
+            var keychain = await AddAsync(extKey.Neuter().ToString(_client.Network), _client.Encrypt(extKeyStr, passphrase), cancellationToken);
             keychain.ExtendedPrivateKey = extKeyStr;
             return keychain;
         }

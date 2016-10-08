@@ -17,5 +17,8 @@ namespace BitGo.Types {
 
         [JsonProperty("isBitGo", Required = Required.Default)]
         public bool IsBitGo { get; internal set; }
+        
+        [JsonIgnore]
+        public string ExtendedPrivateKey { get; internal set; }
     }
 }

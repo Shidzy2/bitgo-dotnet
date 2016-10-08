@@ -20,13 +20,13 @@ namespace ConsoleApplication
         private static async Task RunAsync(IConfigurationRoot configuration) {
             var bitGoClient = new BitGoClient(BitGoNetwork.Main, configuration["Token"]);
             
-            var keychains = await bitGoClient.Keychains.GetListAsync(10);
-            Console.WriteLine(keychains.Start);
-            Console.WriteLine(keychains.Count);
-            Console.WriteLine(keychains.Total);
-            foreach(var k in keychains.Keychains) {
+            var wallets = await bitGoClient.Wallets.GetListAsync();
+            Console.WriteLine(wallets.Start);
+            Console.WriteLine(wallets.Count);
+            Console.WriteLine(wallets.Total);
+            foreach(var k in wallets.Wallets) {
                 // Console.WriteLine(k.ExtendedPublicKey);
-                Console.WriteLine((await bitGoClient.Keychains.GetAsync(k.ExtendedPublicKey)).EncryptedExtendedPrivateKey);
+                Console.WriteLine((await bitGoClient.Wallets.GetAsync(k.Id)).Label);
             }
         }
     }
