@@ -10,6 +10,14 @@ namespace BitGo.Services
 {
     public sealed class WalletService : ApiService, IWalletService {
         
+        public IWalletItemService this[string id]
+        {
+            get 
+            {
+                return new WalletItemService(_client, this, id);
+            }
+        }
+
         internal WalletService(BitGoClient client) : base(client, "wallet") {
 
         }

@@ -16,5 +16,8 @@ namespace BitGo.Types {
 
         [JsonProperty("limit", Required = Required.Default)]
         public int Limit { get; internal set; }
+
+        [JsonProperty("hasMore", Required = Required.Default)]
+        public bool? HasMore { get; internal set; }
     }
 }

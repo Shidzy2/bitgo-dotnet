@@ -113,6 +113,15 @@ namespace BitGo
             return client;
         }
 
+        internal static string ToQueryString(this Dictionary<string, string> nvc)
+        {
+            var array = nvc
+                .Where(keyValue => !string.IsNullOrEmpty(keyValue.Value))
+                .Select(keyValue => $"{WebUtility.UrlEncode(keyValue.Key)}={WebUtility.UrlEncode(keyValue.Value)}")
+                .ToArray();
+            return "?" + string.Join("&", array);
+        }
+
         internal async Task<T> GetAsync<T>(string url, bool authenticated = true, CancellationToken cancellationToken = default(CancellationToken))
         {
             using (var client = GetHttpClient(authenticated))
@@ -128,7 +137,8 @@ namespace BitGo
                 }
                 catch (Exception ex)
                 {
-                    switch(response.StatusCode) {
+                    switch (response.StatusCode)
+                    {
                         case HttpStatusCode.Unauthorized:
                             throw new UnauthorizedException(content, ex);
                         case HttpStatusCode.NotFound:
@@ -156,7 +166,8 @@ namespace BitGo
                 }
                 catch (Exception ex)
                 {
-                    switch(response.StatusCode) {
+                    switch (response.StatusCode)
+                    {
                         case HttpStatusCode.Unauthorized:
                             throw new UnauthorizedException(content, ex);
                         case HttpStatusCode.NotFound:
@@ -184,7 +195,8 @@ namespace BitGo
                 }
                 catch (Exception ex)
                 {
-                    switch(response.StatusCode) {
+                    switch (response.StatusCode)
+                    {
                         case HttpStatusCode.Unauthorized:
                             throw new UnauthorizedException(content, ex);
                         case HttpStatusCode.NotFound:

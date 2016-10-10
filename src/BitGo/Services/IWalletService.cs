@@ -8,7 +8,7 @@ using BitGo.Types;
 namespace BitGo.Services
 {
     /// <summary>
-    /// A Keychain service interface to use the BitGo API
+    /// A Wallet service interface to use the BitGo API
     /// </summary>
     public interface IWalletService
     {
@@ -18,6 +18,6 @@ namespace BitGo.Services
 
         Task<Wallet> AddAsync(string label, string[] extendedPublicKeys, string enterprise = null, bool? disableTransactionNotifications = null, int m = 2, int n = 3,  CancellationToken cancellationToken = default(CancellationToken));
 
-        Task<Wallet> CreateAsync(string label, string passphrase, string backupExtendedPublicKey = null, string backupProvider = null, string enterprise = null, bool? disableTransactionNotifications = null, CancellationToken cancellationToken = default(CancellationToken))
+        Task<Wallet> CreateAsync(string label, string passphrase, string backupExtendedPublicKey = null, string backupProvider = null, string enterprise = null, bool? disableTransactionNotifications = null, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

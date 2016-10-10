@@ -3,7 +3,7 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-
+using BitGo.Services;
 
 namespace BitGo
 {
@@ -12,6 +12,8 @@ namespace BitGo
     /// </summary>
     public interface IBitGoClient
     {
-        
+        IWalletService Wallet { get; }
+
+        IKeychainService Keychains { get; } 
     }
 }
