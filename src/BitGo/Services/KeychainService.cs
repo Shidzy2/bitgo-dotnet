@@ -15,7 +15,7 @@ namespace BitGo.Services
         }
 
         public Task<KeychainList> GetListAsync(int? skip = null, int? limit = null, CancellationToken cancellationToken = default(CancellationToken)) 
-            => _client.GetAsync<KeychainList>($"{_url}{_client.ConvertToQueryString(new Dictionary<string, string>(){ { "skip", skip?.ToString() }, { "limit", limit?.ToString() } })}", true, cancellationToken);
+            => _client.GetAsync<KeychainList>($"{_url}{_client.ConvertToQueryString(new Dictionary<string, object>(){ { "skip", skip }, { "limit", limit } })}", true, cancellationToken);
 
         public Task<Keychain> GetAsync(string extendedPublicKey, CancellationToken cancellationToken = default(CancellationToken)) 
             => _client.PostAsync<Keychain>($"{_url}/{extendedPublicKey}", null, cancellationToken);

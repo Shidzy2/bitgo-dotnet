@@ -35,12 +35,14 @@ namespace BitGo
         private const string MainBaseUrl = "https://www.bitgo.com/api/v1";
         private const string TestBaseUrl = "https://test.bitgo.com/api/v1";
         private readonly Uri _baseUrl;
-        private readonly SecureString _token;
+        private SecureString _token;
         private readonly BitGoNetwork _network;
 
         private readonly IKeychainService _keychainService;
 
         private readonly IWalletService _walletService;
+
+        private readonly IUserService _userService;
 
         internal Network Network
         {
@@ -66,6 +68,14 @@ namespace BitGo
             }
         }
 
+        public IUserService Users
+        {
+            get
+            {
+                return _userService;
+            }
+        }
+
         public BitGoClient(string token = null) : this(BitGoNetwork.Main, token)
         {
 
@@ -81,9 +91,13 @@ namespace BitGo
             }
             _keychainService = new KeychainService(this);
             _walletService = new WalletService(this);
+            _userService = new UserService(this);
         }
 
-
+        public void SetAccessToken(string token)
+        {
+            _token = ConvertToSecureString(token);
+        }
 
         public string Decrypt(string input, string password)
         {
@@ -106,20 +120,34 @@ namespace BitGo
             var client = new HttpClient(handler);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("BitGoDotNet", Version));
-            if (authenticated)
+            if (authenticated && _token != null)
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ConvertToString(_token));
             }
             return client;
         }
 
-        internal string ConvertToQueryString(Dictionary<string, string> nvc)
+        internal string ConvertToQueryString(Dictionary<string, object> nvc)
         {
             var array = nvc
-                .Where(keyValue => !string.IsNullOrEmpty(keyValue.Value))
+                .Where(keyValue => keyValue.Value != null)
+                .Select(keyValue => new KeyValuePair<string, string>(keyValue.Key, ConvertValueToString(keyValue.Value)))
                 .Select(keyValue => $"{WebUtility.UrlEncode(keyValue.Key)}={WebUtility.UrlEncode(keyValue.Value)}")
                 .ToArray();
             return array.Any() ? "?" + string.Join("&", array) : string.Empty;
+        }
+
+        private string ConvertValueToString(object value)
+        {
+            if (value is bool || value is bool?)
+            {
+                return ((bool)value) ? "true" : "false";
+            }
+            if (value is string)
+            {
+                return (string)value;
+            }
+            return value?.ToString();
         }
 
         internal async Task<T> GetAsync<T>(string url, bool authenticated = true, CancellationToken cancellationToken = default(CancellationToken))
@@ -132,7 +160,10 @@ namespace BitGo
                 try
                 {
                     response.EnsureSuccessStatusCode();
-
+                    if (string.IsNullOrEmpty(content))
+                    {
+                        return default(T);
+                    }
                     return JsonConvert.DeserializeObject<T>(content);
                 }
                 catch (Exception ex)
@@ -161,7 +192,10 @@ namespace BitGo
                 try
                 {
                     response.EnsureSuccessStatusCode();
-
+                    if (string.IsNullOrEmpty(content))
+                    {
+                        return default(T);
+                    }
                     return JsonConvert.DeserializeObject<T>(content);
                 }
                 catch (Exception ex)
@@ -190,7 +224,10 @@ namespace BitGo
                 try
                 {
                     response.EnsureSuccessStatusCode();
-
+                    if (string.IsNullOrEmpty(content))
+                    {
+                        return default(T);
+                    }
                     return JsonConvert.DeserializeObject<T>(content);
                 }
                 catch (Exception ex)

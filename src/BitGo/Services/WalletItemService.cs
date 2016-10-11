@@ -23,7 +23,7 @@ namespace BitGo.Services
             => _walletService.GetAsync(_id, cancellationToken);
 
         public Task<WalletTransactionList> GetTransactionListAsync(bool? compact = null, int? skip = null, int? limit = null, CancellationToken cancellationToken = default(CancellationToken))
-            => _client.GetAsync<WalletTransactionList>($"{_url}/tx{_client.ConvertToQueryString(new Dictionary<string, string>(){ { "compact", compact?.ToString() }, { "skip", skip?.ToString() }, { "limit", limit?.ToString() } })}", true, cancellationToken);
+            => _client.GetAsync<WalletTransactionList>($"{_url}/tx{_client.ConvertToQueryString(new Dictionary<string, object>(){ { "compact", compact }, { "skip", skip }, { "limit", limit } })}", true, cancellationToken);
 
         public Task<WalletTransaction> GetTransactionAsync(string hash, CancellationToken cancellationToken = default(CancellationToken))
             => _client.GetAsync<WalletTransaction>($"{_url}/tx/{hash}", true, cancellationToken);
@@ -32,7 +32,7 @@ namespace BitGo.Services
             => _client.GetAsync<WalletTransaction>($"{_url}/tx/sequence/{sequenceId}", true, cancellationToken);
 
         public Task<WalletAddressList> GetAddressListAsync(int? chain = null, int? skip = null, int? limit = null, CancellationToken cancellationToken = default(CancellationToken))
-            => _client.GetAsync<WalletAddressList>($"{_url}/addresses{_client.ConvertToQueryString(new Dictionary<string, string>(){ { "chain", chain?.ToString() }, { "skip", skip?.ToString() }, { "limit", limit?.ToString() } })}", true, cancellationToken);
+            => _client.GetAsync<WalletAddressList>($"{_url}/addresses{_client.ConvertToQueryString(new Dictionary<string, object>(){ { "chain", chain }, { "skip", skip }, { "limit", limit } })}", true, cancellationToken);
 
         public Task<WalletAddress> GetAddressAsync(string address, CancellationToken cancellationToken = default(CancellationToken))
             => _client.GetAsync<WalletAddress>($"{_url}/addresses/{address}", true, cancellationToken);
@@ -41,7 +41,7 @@ namespace BitGo.Services
             => _client.PostAsync<WalletAddress>($"{_url}/addresses/{chain}", null, cancellationToken);
 
         public Task<WalletUnspentList> GetUnspentListAsync(bool? instant = null, long? target = null, int? skip = null, int? limit = null, long? minSize = null, CancellationToken cancellationToken = default(CancellationToken))
-            => _client.GetAsync<WalletUnspentList>($"{_url}/unspents{_client.ConvertToQueryString(new Dictionary<string, string>(){ { "instant", instant?.ToString() }, { "target", target?.ToString() }, { "skip", skip?.ToString() }, { "limit", limit?.ToString() }, { "minSize", minSize?.ToString() }, })}", true, cancellationToken);
+            => _client.GetAsync<WalletUnspentList>($"{_url}/unspents{_client.ConvertToQueryString(new Dictionary<string, object>(){ { "instant", instant }, { "target", target }, { "skip", skip }, { "limit", limit }, { "minSize", minSize }, })}", true, cancellationToken);
 
         public Task<WalletFreeze> FreezeAsync(TimeSpan? duration = null, CancellationToken cancellationToken = default(CancellationToken))
             => _client.PostAsync<WalletFreeze>($"{_url}/freeze", new FreezeWalletArgs { Duration = (int?)duration?.TotalSeconds }, cancellationToken);

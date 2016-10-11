@@ -19,7 +19,10 @@ namespace ConsoleApplication
 
         private static async Task RunAsync(IConfigurationRoot configuration) {
             var bitGoClient = new BitGoClient(BitGoNetwork.Main, configuration["Token"]);
-            
+            // var user = await bitGoClient.Users.LoginAsync("", "", "");
+            // bitGoClient.SetAccessToken(user.AccessToken);
+            // var session = await bitGoClient.Users.GetSessionAsync();
+            // Console.WriteLine(session.Client);
             var wallets = await bitGoClient.Wallets.GetListAsync();
             Console.WriteLine(wallets.Start);
             Console.WriteLine(wallets.Count);
