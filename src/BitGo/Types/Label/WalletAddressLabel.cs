@@ -9,10 +9,10 @@ namespace BitGo.Types
 {
     public class WalletAddressLabel
     {
-        [JsonProperty("walletId", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("walletId")]
         public string WalletId { get; set; }
 
-        [JsonProperty("address", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("address")]
         public string Address { get; set; }
 
         [JsonProperty("label")]

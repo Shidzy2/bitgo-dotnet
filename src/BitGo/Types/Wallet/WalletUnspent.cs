@@ -22,7 +22,7 @@ namespace BitGo.Types
         public int Confirmations { get; set; }
 
         [JsonProperty("date")]
-        public DateTime Date { get; set; }
+        public DateTimeOffset Date { get; set; }
 
         [JsonProperty("redeemScript")]
         public string RedeemScript { get; set; }

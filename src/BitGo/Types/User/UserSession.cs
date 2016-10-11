@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 namespace BitGo.Types {
     
     [JsonObject(MemberSerialization.OptIn)]
-    public class UserSessionResult {
+    internal class UserSessionResult {
         [JsonProperty("session", Required = Required.Always)]
         public UserSession Session { get; internal set; }
     }

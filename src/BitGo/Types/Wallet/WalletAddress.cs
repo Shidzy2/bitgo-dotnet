@@ -36,5 +36,8 @@ namespace BitGo.Types
 
         [JsonProperty("txCount")]
         public int TxCount { get; set; }
+
+        [JsonProperty("wallet")]
+        public string Wallet { get; set; }
     }
 }

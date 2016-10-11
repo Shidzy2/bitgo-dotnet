@@ -23,7 +23,7 @@ namespace BitGo.Types
         public int Confirmations { get; set; }
 
         [JsonProperty("date")]
-        public DateTime Date { get; set; }
+        public DateTimeOffset Date { get; set; }
 
         [JsonProperty("fee")]
         public long Fee { get; set; }
@@ -76,13 +76,13 @@ namespace BitGo.Types
         public long Amount { get; set; }
 
         [JsonProperty("createdDate")]
-        public DateTime CreatedDate { get; set; }
+        public DateTimeOffset CreatedDate { get; set; }
 
         [JsonProperty("creator")]
         public string Creator { get; set; }
 
         [JsonProperty("signedDate")]
-        public DateTime SignedDate { get; set; }
+        public DateTimeOffset SignedDate { get; set; }
 
         [JsonProperty("size")]
         public long Size { get; set; }

@@ -68,7 +68,7 @@ namespace BitGo
             }
         }
 
-        public IUserService Users
+        public IUserService User
         {
             get
             {
@@ -220,6 +220,36 @@ namespace BitGo
                 var data = JsonConvert.SerializeObject(obj ?? new object());
                 var response = await client.PutAsync($"{_baseUrl}/{url}",
                             new StringContent(data, Encoding.UTF8, "application/json"), cancellationToken);
+                string content = await response.Content.ReadAsStringAsync();
+                try
+                {
+                    response.EnsureSuccessStatusCode();
+                    if (string.IsNullOrEmpty(content))
+                    {
+                        return default(T);
+                    }
+                    return JsonConvert.DeserializeObject<T>(content);
+                }
+                catch (Exception ex)
+                {
+                    switch (response.StatusCode)
+                    {
+                        case HttpStatusCode.Unauthorized:
+                            throw new UnauthorizedException(content, ex);
+                        case HttpStatusCode.NotFound:
+                            throw new NotFoundException(content, ex);
+                        default:
+                            throw new Exception(content, ex);
+                    }
+                }
+            }
+        }
+
+        internal async Task<T> DeleteAsync<T>(string url, CancellationToken cancellationToken = default(CancellationToken)) where T : new()
+        {
+            using (var client = GetHttpClient())
+            {
+                var response = await client.DeleteAsync($"{_baseUrl}/{url}", cancellationToken);
                 string content = await response.Content.ReadAsStringAsync();
                 try
                 {
