@@ -12,7 +12,7 @@ namespace BitGo
     /// </summary>
     public interface IBitGoClient
     {
-        IWalletService Wallet { get; }
+        IWalletService Wallets { get; }
 
         IKeychainService Keychains { get; } 
     }

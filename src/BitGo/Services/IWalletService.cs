@@ -12,7 +12,7 @@ namespace BitGo.Services
     /// </summary>
     public interface IWalletService
     {
-        Task<WalletList> GetListAsync(int skip = 0, int limit = 25, CancellationToken cancellationToken = default(CancellationToken));
+        Task<WalletList> GetListAsync(int? skip = null, int? limit = null, CancellationToken cancellationToken = default(CancellationToken));
 
         Task<Wallet> GetAsync(string id, CancellationToken cancellationToken = default(CancellationToken));
 

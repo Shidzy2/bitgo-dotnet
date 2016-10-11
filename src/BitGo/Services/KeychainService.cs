@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using BitGo.Types;
 using BitGo.Args;
 using NBitcoin;
@@ -13,8 +14,8 @@ namespace BitGo.Services
 
         }
 
-        public Task<KeychainList> GetListAsync(int skip = 0, int limit = 100, CancellationToken cancellationToken = default(CancellationToken)) 
-            => _client.GetAsync<KeychainList>($"{_url}?skip={skip}&limit={limit}", true, cancellationToken);
+        public Task<KeychainList> GetListAsync(int? skip = null, int? limit = null, CancellationToken cancellationToken = default(CancellationToken)) 
+            => _client.GetAsync<KeychainList>($"{_url}{_client.ConvertToQueryString(new Dictionary<string, string>(){ { "skip", skip?.ToString() }, { "limit", limit?.ToString() } })}", true, cancellationToken);
 
         public Task<Keychain> GetAsync(string extendedPublicKey, CancellationToken cancellationToken = default(CancellationToken)) 
             => _client.PostAsync<Keychain>($"{_url}/{extendedPublicKey}", null, cancellationToken);

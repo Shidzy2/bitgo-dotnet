@@ -12,7 +12,7 @@ namespace BitGo.Services
     /// </summary>
     public interface IKeychainService
     {
-        Task<KeychainList> GetListAsync(int skip = 0, int limit = 100, CancellationToken cancellationToken = default(CancellationToken));
+        Task<KeychainList> GetListAsync(int? skip = null, int? limit = null, CancellationToken cancellationToken = default(CancellationToken));
 
         Task<Keychain> GetAsync(string extendedPublicKey, CancellationToken cancellationToken = default(CancellationToken));
 
