@@ -11,28 +11,28 @@ namespace BitGo.Types
     public class InstantGuarantee
     {
         [JsonProperty("id")]
-        public string Id { get; set; }
+        public string Id { get; internal set; }
 
         [JsonProperty("guarantee")]
-        public string Guarantee { get; set; }
+        public string Guarantee { get; internal set; }
 
         [JsonProperty("amount")]
-        public long Amount { get; set; }
+        public long Amount { get; internal set; }
 
         [JsonProperty("createTime")]
-        public DateTimeOffset CreateTime { get; set; }
+        public DateTimeOffset CreateTime { get; internal set; }
 
         [JsonProperty("transactionId")]
-        public string TransactionId { get; set; }
+        public string TransactionId { get; internal set; }
 
         [JsonProperty("normalizedHash")]
-        public string NormalizedHash { get; set; }
+        public string NormalizedHash { get; internal set; }
 
         [JsonProperty("signature")]
-        public string Signature { get; set; }
+        public string Signature { get; internal set; }
 
         [JsonProperty("state")]
-        public string State { get; set; }
+        public string State { get; internal set; }
 
         public bool IsValid()
         {

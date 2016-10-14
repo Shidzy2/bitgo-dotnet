@@ -24,7 +24,7 @@ namespace BitGo.Services
             => _client.PutAsync<WalletAddressLabel>($"{_url}/{walletId}/{address}", new SetLabelArgs { Label = label }, cancellationToken);
 
         public Task<WalletAddressLabel> DeleteAsync(string walletId, string address, CancellationToken cancellationToken = default(CancellationToken)) 
-            => _client.DeleteAsync<WalletAddressLabel>($"{_url}/{walletId}/{address}", cancellationToken);
+            => _client.DeleteAsync<WalletAddressLabel>($"{_url}/{walletId}/{address}", null, cancellationToken);
         
     }
 }

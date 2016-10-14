@@ -30,6 +30,12 @@ namespace BitGo.Services
 
         Task<long> GetBillingFeeAsync(long amount, bool instant = false, CancellationToken cancellationToken = default(CancellationToken));
 
+        Task<WalletWebhook[]> GetWebhookListAsync(CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<WalletWebhook> AddWebhookAsync(string type, string url, int? numConfirmations = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        Task RemoveWebookAsync(string type, string url, CancellationToken cancellationToken = default(CancellationToken));
+
         Task<WalletFreeze> FreezeAsync(TimeSpan? duration = null, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

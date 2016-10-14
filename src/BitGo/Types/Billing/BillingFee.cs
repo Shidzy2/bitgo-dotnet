@@ -11,6 +11,6 @@ namespace BitGo.Types
     internal class BillingFee
     {
         [JsonProperty("fee")]
-        public long Fee { get; set; }
+        public long Fee { get; internal set; }
     }
 }

@@ -38,7 +38,7 @@ namespace BitGo.Services
             => _client.PostAsync<object>($"{_url}/sendotp", new SendOtpArgs { ForceSms = forceSms }, cancellationToken);
 
         public Task UnlockAsync(string otp, TimeSpan? duration = null, CancellationToken cancellationToken = default(CancellationToken))
-            => _client.PostAsync<object>($"{_url}/sendotp", new UnlockUserArgs { Otp = otp, Duration = (int?)duration?.TotalSeconds }, cancellationToken);
+            => _client.PostAsync<object>($"{_url}/unlock", new UnlockUserArgs { Otp = otp, Duration = (int?)duration?.TotalSeconds }, cancellationToken);
 
     }
 }

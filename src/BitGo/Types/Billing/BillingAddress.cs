@@ -10,6 +10,6 @@ namespace BitGo.Types
     internal class BillingAddress
     {
         [JsonProperty("address")]
-        public string Address { get; set; }
+        public string Address { get; internal set; }
     }
 }

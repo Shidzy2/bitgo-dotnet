@@ -44,6 +44,18 @@ namespace BitGo
 
         private readonly IUserService _userService;
 
+        private readonly IBillingService _billingService;
+
+        private readonly IInstantService _instantService;
+
+        private readonly IMarketService _marketService;
+
+        private readonly ITransactionService _transactionService;
+
+        private readonly ILabelService _labelService;
+
+        private readonly IWebhookService _webhookService;
+
         internal Network Network
         {
             get
@@ -76,6 +88,54 @@ namespace BitGo
             }
         }
 
+        public IBillingService Billing 
+        {
+            get
+            {
+                return _billingService;
+            }
+        }
+
+        public IInstantService Instant 
+        {
+            get
+            {
+                return _instantService;
+            }
+        }
+
+        public ITransactionService Transaction 
+        {
+            get
+            {
+                return _transactionService;
+            }
+        }
+
+        public ILabelService Labels 
+        {
+            get
+            {
+                return _labelService;
+            }
+        }
+
+        public IMarketService Market 
+        {
+            get
+            {
+                return _marketService;
+            }
+        }
+
+        public IWebhookService Webhooks 
+        {
+            get
+            {
+                return _webhookService;
+            }
+        }
+
         public BitGoClient(string token = null) : this(BitGoNetwork.Main, token)
         {
 
@@ -92,6 +152,12 @@ namespace BitGo
             _keychainService = new KeychainService(this);
             _walletService = new WalletService(this);
             _userService = new UserService(this);
+            _labelService = new LabelService(this);
+            _marketService = new MarketService(this);
+            _transactionService = new TransactionService(this);
+            _instantService = new InstantService(this);
+            _billingService = new BillingService(this);
+            _webhookService = new WebhookService(this);
         }
 
         public void SetAccessToken(string token)
@@ -101,8 +167,7 @@ namespace BitGo
 
         public string Decrypt(string input, string password)
         {
-            SjclDecryptor sd = new SjclDecryptor(input, password);
-            return sd.Plaintext;
+            return new SjclDecryptor(input, password).Plaintext;
         }
 
         public string Encrypt(string input, string password)
@@ -118,6 +183,7 @@ namespace BitGo
                 AllowAutoRedirect = false
             };
             var client = new HttpClient(handler);
+            client.BaseAddress = _baseUrl;
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("BitGoDotNet", Version));
             if (authenticated && _token != null)
@@ -154,7 +220,7 @@ namespace BitGo
         {
             using (var client = GetHttpClient(authenticated))
             {
-                var response = await client.GetAsync($"{_baseUrl}/{url}", cancellationToken);
+                var response = await client.GetAsync($"/{url}", cancellationToken);
                 string content = await response.Content.ReadAsStringAsync();
 
                 try
@@ -186,8 +252,7 @@ namespace BitGo
             using (var client = GetHttpClient())
             {
                 var data = JsonConvert.SerializeObject(obj ?? new object());
-                var response = await client.PostAsync($"{_baseUrl}/{url}",
-                            new StringContent(data, Encoding.UTF8, "application/json"), cancellationToken);
+                var response = await client.PostAsync($"/{url}",  new StringContent(data, Encoding.UTF8, "application/json"), cancellationToken);
                 string content = await response.Content.ReadAsStringAsync();
                 try
                 {
@@ -218,8 +283,7 @@ namespace BitGo
             using (var client = GetHttpClient())
             {
                 var data = JsonConvert.SerializeObject(obj ?? new object());
-                var response = await client.PutAsync($"{_baseUrl}/{url}",
-                            new StringContent(data, Encoding.UTF8, "application/json"), cancellationToken);
+                var response = await client.PutAsync($"/{url}",  new StringContent(data, Encoding.UTF8, "application/json"), cancellationToken);
                 string content = await response.Content.ReadAsStringAsync();
                 try
                 {
@@ -245,11 +309,14 @@ namespace BitGo
             }
         }
 
-        internal async Task<T> DeleteAsync<T>(string url, CancellationToken cancellationToken = default(CancellationToken)) where T : new()
+        internal async Task<T> DeleteAsync<T>(string url, object obj = null, CancellationToken cancellationToken = default(CancellationToken)) where T : new()
         {
             using (var client = GetHttpClient())
             {
-                var response = await client.DeleteAsync($"{_baseUrl}/{url}", cancellationToken);
+                var request = new HttpRequestMessage(HttpMethod.Delete, $"/{url}");
+                var data = JsonConvert.SerializeObject(obj ?? new object());
+                request.Content = new StringContent(data, Encoding.UTF8, "application/json");
+                var response = await client.SendAsync(request, cancellationToken);
                 string content = await response.Content.ReadAsStringAsync();
                 try
                 {

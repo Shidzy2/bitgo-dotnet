@@ -10,39 +10,39 @@ namespace BitGo.Types
     public class WalletUnspent
     {
         [JsonProperty("address")]
-        public string Address { get; set; }
+        public string Address { get; internal set; }
 
         [JsonProperty("blockHeight")]
-        public int BlockHeight { get; set; }
+        public int BlockHeight { get; internal set; }
 
         [JsonProperty("chainPath")]
-        public string ChainPath { get; set; }
+        public string ChainPath { get; internal set; }
 
         [JsonProperty("confirmations")]
-        public int Confirmations { get; set; }
+        public int Confirmations { get; internal set; }
 
         [JsonProperty("date")]
-        public DateTimeOffset Date { get; set; }
+        public DateTimeOffset Date { get; internal set; }
 
         [JsonProperty("redeemScript")]
-        public string RedeemScript { get; set; }
+        public string RedeemScript { get; internal set; }
 
         [JsonProperty("script")]
-        public string Script { get; set; }
+        public string Script { get; internal set; }
 
         [JsonProperty("tx_hash")]
-        public string TransactionHash { get; set; }
+        public string TransactionHash { get; internal set; }
 
         [JsonProperty("tx_output_n")]
-        public int TransactionOutputIndex { get; set; }
+        public int TransactionOutputIndex { get; internal set; }
 
         [JsonProperty("value")]
-        public long Value { get; set; }
+        public long Value { get; internal set; }
 
         [JsonProperty("wallet")]
-        public string WalletId { get; set; }
+        public string WalletId { get; internal set; }
 
         [JsonProperty("instant")]
-        public bool IsInstant { get; set; }
+        public bool IsInstant { get; internal set; }
     }
 }

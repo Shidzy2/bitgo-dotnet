@@ -11,33 +11,33 @@ namespace BitGo.Types
     public class WalletAddress
     {
         [JsonProperty("address")]
-        public string Address { get; set; }
+        public string Address { get; internal set; }
 
         [JsonProperty("chain")]
-        public int Chain { get; set; }
+        public int Chain { get; internal set; }
 
         [JsonProperty("index")]
-        public int Index { get; set; }
+        public int Index { get; internal set; }
 
         [JsonProperty("path")]
-        public string Path { get; set; }
+        public string Path { get; internal set; }
 
         [JsonProperty("redeemScript")]
-        public string RedeemScript { get; set; }
+        public string RedeemScript { get; internal set; }
 
         [JsonProperty("received")]
-        public long Received { get; set; }
+        public long Received { get; internal set; }
 
         [JsonProperty("sent")]
-        public long Sent { get; set; }
+        public long Sent { get; internal set; }
 
         [JsonProperty("balance")]
-        public long Balance { get; set; }
+        public long Balance { get; internal set; }
 
         [JsonProperty("txCount")]
-        public int TxCount { get; set; }
+        public int TxCount { get; internal set; }
 
         [JsonProperty("wallet")]
-        public string Wallet { get; set; }
+        public string Wallet { get; internal set; }
     }
 }

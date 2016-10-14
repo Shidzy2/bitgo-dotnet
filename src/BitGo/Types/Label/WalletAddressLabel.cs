@@ -10,12 +10,12 @@ namespace BitGo.Types
     public class WalletAddressLabel
     {
         [JsonProperty("walletId")]
-        public string WalletId { get; set; }
+        public string WalletId { get; internal set; }
 
         [JsonProperty("address")]
-        public string Address { get; set; }
+        public string Address { get; internal set; }
 
         [JsonProperty("label")]
-        public string Label { get; set; }
+        public string Label { get; internal set; }
     }
 }

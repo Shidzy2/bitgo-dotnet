@@ -10,9 +10,9 @@ namespace BitGo.Types
     public class WalletFreeze
     {
         [JsonProperty("time")]
-        public DateTimeOffset Time { get; set; }
+        public DateTimeOffset Time { get; internal set; }
 
         [JsonProperty("expires")]
-        public DateTimeOffset Expires { get; set; }
+        public DateTimeOffset Expires { get; internal set; }
     }
 }

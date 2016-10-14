@@ -17,5 +17,17 @@ namespace BitGo
         IKeychainService Keychains { get; } 
 
         IUserService User { get; } 
+
+        IBillingService Billing { get; }
+
+        IInstantService Instant { get; }
+
+        ITransactionService Transaction { get; }
+
+        ILabelService Labels { get; }
+
+        IMarketService Market { get; }
+
+        IWebhookService Webhooks { get; }
     }
 }

@@ -11,46 +11,46 @@ namespace BitGo.Types
     public class WalletTransaction
     {
         [JsonProperty("id")]
-        public string Id { get; set; }
+        public string Id { get; internal set; }
 
         [JsonProperty("blockhash")]
-        public string BlockHash { get; set; }
+        public string BlockHash { get; internal set; }
 
         [JsonProperty("height")]
-        public int Height { get; set; }
+        public int Height { get; internal set; }
 
         [JsonProperty("confirmations")]
-        public int Confirmations { get; set; }
+        public int Confirmations { get; internal set; }
 
         [JsonProperty("date")]
-        public DateTimeOffset Date { get; set; }
+        public DateTimeOffset Date { get; internal set; }
 
         [JsonProperty("fee")]
-        public long Fee { get; set; }
+        public long Fee { get; internal set; }
 
         [JsonProperty("pending")]
-        public bool IsPending { get; set; }
+        public bool IsPending { get; internal set; }
 
         [JsonProperty("instant")]
-        public bool IsInstant { get; set; }
+        public bool IsInstant { get; internal set; }
 
         [JsonProperty("instantId")]
-        public string InstantId { get; set; }
+        public string InstantId { get; internal set; }
 
         [JsonProperty("comment")]
-        public string Comment { get; set; }
+        public string Comment { get; internal set; }
 
         [JsonProperty("sequenceId")]
-        public string SequenceId { get; set; }
+        public string SequenceId { get; internal set; }
 
         [JsonProperty("hex")]
-        public string Hex { get; set; }
+        public string Hex { get; internal set; }
 
         [JsonProperty("entries")]
-        public WalletTransactionEntry[] Entries { get; set; }
+        public WalletTransactionEntry[] Entries { get; internal set; }
 
         [JsonProperty("outputs")]
-        public WalletTransactionEntry[] Outputs { get; set; }
+        public WalletTransactionEntry[] Outputs { get; internal set; }
 
 
         private string _normalizedHash = null;
@@ -73,24 +73,24 @@ namespace BitGo.Types
         }
 
         [JsonProperty("amount")]
-        public long Amount { get; set; }
+        public long Amount { get; internal set; }
 
         [JsonProperty("createdDate")]
-        public DateTimeOffset CreatedDate { get; set; }
+        public DateTimeOffset CreatedDate { get; internal set; }
 
         [JsonProperty("creator")]
-        public string Creator { get; set; }
+        public string Creator { get; internal set; }
 
         [JsonProperty("signedDate")]
-        public DateTimeOffset SignedDate { get; set; }
+        public DateTimeOffset SignedDate { get; internal set; }
 
         [JsonProperty("size")]
-        public long Size { get; set; }
+        public long Size { get; internal set; }
 
         [JsonProperty("transactionId")]
-        public string TransactionId { get; set; }
+        public string TransactionId { get; internal set; }
 
         [JsonProperty("state")]
-        public string State { get; set; }
+        public string State { get; internal set; }
     }
 }

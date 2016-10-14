@@ -43,6 +43,14 @@ namespace BitGo.Services
         public Task<WalletUnspentList> GetUnspentListAsync(bool? instant = null, long? target = null, int? skip = null, int? limit = null, long? minSize = null, CancellationToken cancellationToken = default(CancellationToken))
             => _client.GetAsync<WalletUnspentList>($"{_url}/unspents{_client.ConvertToQueryString(new Dictionary<string, object>(){ { "instant", instant }, { "target", target }, { "skip", skip }, { "limit", limit }, { "minSize", minSize }, })}", true, cancellationToken);
 
+        public Task<WalletWebhook[]> GetWebhookListAsync(CancellationToken cancellationToken = default(CancellationToken))
+            => _client.GetAsync<WalletWebhook[]>($"{_url}/webhooks", true, cancellationToken);
+        public Task<WalletWebhook> AddWebhookAsync(string type, string url, int? numConfirmations = null, CancellationToken cancellationToken = default(CancellationToken))
+            => _client.PostAsync<WalletWebhook>($"{_url}/webhooks", new AddWalletWebhookArgs { Type = type, Url = url, NumConfirmations = numConfirmations }, cancellationToken);
+
+        public Task RemoveWebookAsync(string type, string url, CancellationToken cancellationToken = default(CancellationToken))
+            => _client.DeleteAsync<object>($"{_url}/webhooks", new RemoveWalletWebhookArgs { Type = type, Url = url }, cancellationToken);
+
         public async Task<long> GetBillingFeeAsync(long amount, bool instant = false, CancellationToken cancellationToken = default(CancellationToken))
             => (await _client.GetAsync<BillingFee>($"{_url}/billing/fee{_client.ConvertToQueryString(new Dictionary<string, object>(){ { "amount", amount }, { "instant", instant } })}", true, cancellationToken)).Fee;
 
