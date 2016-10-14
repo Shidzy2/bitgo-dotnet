@@ -12,6 +12,8 @@ namespace BitGo.Services
     /// </summary>
     public interface IWalletService
     {
+        IWalletItemService this[string id] { get; }
+
         Task<WalletList> GetListAsync(int? skip = null, int? limit = null, CancellationToken cancellationToken = default(CancellationToken));
 
         Task<Wallet> GetAsync(string id, CancellationToken cancellationToken = default(CancellationToken));

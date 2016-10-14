@@ -32,8 +32,8 @@ namespace BitGo
     public class BitGoClient : IBitGoClient
     {
         private const string Version = "0.0.1";
-        private const string MainBaseUrl = "https://www.bitgo.com/api/v1";
-        private const string TestBaseUrl = "https://test.bitgo.com/api/v1";
+        private const string MainBaseUrl = "https://www.bitgo.com/api/v1/";
+        private const string TestBaseUrl = "https://test.bitgo.com/api/v1/";
         private readonly Uri _baseUrl;
         private SecureString _token;
         private readonly BitGoNetwork _network;
@@ -41,6 +41,8 @@ namespace BitGo
         private readonly IKeychainService _keychainService;
 
         private readonly IWalletService _walletService;
+
+        private readonly IWalletAddressService _walletAddressService;
 
         private readonly IUserService _userService;
 
@@ -55,6 +57,9 @@ namespace BitGo
         private readonly ILabelService _labelService;
 
         private readonly IWebhookService _webhookService;
+
+        private readonly IPendingApprovalService _pendingApprovalService;
+
 
         internal Network Network
         {
@@ -77,6 +82,14 @@ namespace BitGo
             get
             {
                 return _walletService;
+            }
+        }
+
+        public IWalletAddressService WalletAddresses
+        {
+            get
+            {
+                return _walletAddressService;
             }
         }
 
@@ -136,6 +149,14 @@ namespace BitGo
             }
         }
 
+        public IPendingApprovalService PendingApprovals
+        {
+            get
+            {
+                return _pendingApprovalService;
+            }
+        }
+
         public BitGoClient(string token = null) : this(BitGoNetwork.Main, token)
         {
 
@@ -151,6 +172,7 @@ namespace BitGo
             }
             _keychainService = new KeychainService(this);
             _walletService = new WalletService(this);
+            _walletAddressService = new WalletAddressService(this);
             _userService = new UserService(this);
             _labelService = new LabelService(this);
             _marketService = new MarketService(this);
@@ -158,6 +180,7 @@ namespace BitGo
             _instantService = new InstantService(this);
             _billingService = new BillingService(this);
             _webhookService = new WebhookService(this);
+            _pendingApprovalService = new PendingApprovalService(this);
         }
 
         public void SetAccessToken(string token)
@@ -220,7 +243,8 @@ namespace BitGo
         {
             using (var client = GetHttpClient(authenticated))
             {
-                var response = await client.GetAsync($"/{url}", cancellationToken);
+                var response = await client.GetAsync($"{url}", cancellationToken);
+                Console.WriteLine(response.RequestMessage.RequestUri);
                 string content = await response.Content.ReadAsStringAsync();
 
                 try
@@ -252,7 +276,7 @@ namespace BitGo
             using (var client = GetHttpClient())
             {
                 var data = JsonConvert.SerializeObject(obj ?? new object());
-                var response = await client.PostAsync($"/{url}",  new StringContent(data, Encoding.UTF8, "application/json"), cancellationToken);
+                var response = await client.PostAsync($"{url}",  new StringContent(data, Encoding.UTF8, "application/json"), cancellationToken);
                 string content = await response.Content.ReadAsStringAsync();
                 try
                 {
@@ -283,7 +307,7 @@ namespace BitGo
             using (var client = GetHttpClient())
             {
                 var data = JsonConvert.SerializeObject(obj ?? new object());
-                var response = await client.PutAsync($"/{url}",  new StringContent(data, Encoding.UTF8, "application/json"), cancellationToken);
+                var response = await client.PutAsync($"{url}",  new StringContent(data, Encoding.UTF8, "application/json"), cancellationToken);
                 string content = await response.Content.ReadAsStringAsync();
                 try
                 {
@@ -313,7 +337,7 @@ namespace BitGo
         {
             using (var client = GetHttpClient())
             {
-                var request = new HttpRequestMessage(HttpMethod.Delete, $"/{url}");
+                var request = new HttpRequestMessage(HttpMethod.Delete, $"{url}");
                 var data = JsonConvert.SerializeObject(obj ?? new object());
                 request.Content = new StringContent(data, Encoding.UTF8, "application/json");
                 var response = await client.SendAsync(request, cancellationToken);

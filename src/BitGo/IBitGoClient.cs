@@ -14,6 +14,8 @@ namespace BitGo
     {
         IWalletService Wallets { get; }
 
+        IWalletAddressService WalletAddresses { get; }
+
         IKeychainService Keychains { get; } 
 
         IUserService User { get; } 
@@ -29,5 +31,7 @@ namespace BitGo
         IMarketService Market { get; }
 
         IWebhookService Webhooks { get; }
+
+        IPendingApprovalService PendingApprovals { get; }
     }
 }

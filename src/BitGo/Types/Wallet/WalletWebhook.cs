@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace BitGo.Types
 {
+    [JsonObject(MemberSerialization.OptIn)]
     public class WalletWebhook
     {
         [JsonProperty("walletId")]

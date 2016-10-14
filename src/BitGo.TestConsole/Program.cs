@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using Newtonsoft.Json;
 using System.IO;
 using System.Threading.Tasks;
 using BitGo;
@@ -29,7 +31,7 @@ namespace ConsoleApplication
             Console.WriteLine(wallets.Total);
             foreach(var k in wallets.Wallets) {
                 // Console.WriteLine(k.ExtendedPublicKey);
-                Console.WriteLine((await bitGoClient.Wallets.GetAsync(k.Id)).Label);
+                Console.WriteLine(JsonConvert.SerializeObject(await bitGoClient.Wallets[k.Id].GetAsync()));
             }
         }
     }

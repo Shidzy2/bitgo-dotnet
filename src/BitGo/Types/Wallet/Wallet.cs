@@ -1,10 +1,12 @@
 using System;
 using Newtonsoft.Json;
 
-namespace BitGo.Types {
-    
+namespace BitGo.Types
+{
+
     [JsonObject(MemberSerialization.OptIn)]
-    public class Wallet {
+    public class Wallet
+    {
         [JsonProperty("id", Required = Required.Always)]
         public string Id { get; internal set; }
 
