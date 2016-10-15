@@ -1,6 +1,7 @@
 using System;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
@@ -178,10 +179,27 @@ namespace BitGo.Helpers.Sjcl
                     "Parameter blockIndex must be larger than zero."
                 );
             }
-            var indexBytes = Convert
+            var hex = Convert
                 .ToString(blockIndex, 16)
-                .PadLeft(8, '0')
-                .ToBytes();
+                .PadLeft(8, '0');
+           
+           if (hex == null)
+            {
+                throw new ArgumentNullException("hex");
+            }
+            var outOfRange = hex.Length % 2 == 1 ||
+                !Regex.IsMatch(hex.ToLower(), "^[0-9a-f]*$");
+            if (outOfRange)
+            {
+                throw new ArgumentOutOfRangeException(
+                    "hex", "Invalid hexadecimal notation."
+                );
+            }
+            var indexBytes = Enumerable
+                .Range(0, hex.Length / 2)
+                .Select(i => Convert.ToByte(hex.Substring(i * 2, 2), 16))
+                .ToArray();
+
             var bytes = new byte[Salt.Length + indexBytes.Length];
             Array.Copy(Salt, bytes, Salt.Length);
             Array.Copy(indexBytes, 0, bytes, Salt.Length, indexBytes.Length);

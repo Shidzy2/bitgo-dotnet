@@ -190,12 +190,12 @@ namespace BitGo
 
         public string Decrypt(string input, string password)
         {
-            return new SjclDecryptor(input, password).Plaintext;
+            return new SjclManaged().Decrypt(input, password);
         }
 
         public string Encrypt(string input, string password)
         {
-            return new SjclEncryptor(input, password).EncryptedText;
+            return new SjclManaged().Encrypt(input, password);
         }
 
 
