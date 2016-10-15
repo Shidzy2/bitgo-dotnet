@@ -19,5 +19,11 @@ namespace BitGo.Services
         Task<Keychain> AddAsync(string extendedPublicKey, string encryptedExtendedPrivateKey = null, CancellationToken cancellationToken = default(CancellationToken));
 
         Task<Keychain> CreateAsync(string passphrase, string seedHex = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<Keychain> UpdateAsync(string extendedPublicKey, string encryptedExtendedPrivateKey, CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<Keychain> CreateBitGoAsync(CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<Keychain> CreateBackupAsync(string provider, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

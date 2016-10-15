@@ -6,7 +6,7 @@ namespace BitGo.Args {
     [JsonObject(MemberSerialization.OptIn)]
     internal class SendTransactionArgs {
 
-        [JsonProperty("hex", Required = Required.Always)]
+        [JsonProperty("tx", Required = Required.Always)]
         public string Hex { get; internal set; }
 
         [JsonProperty("sequenceId", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]

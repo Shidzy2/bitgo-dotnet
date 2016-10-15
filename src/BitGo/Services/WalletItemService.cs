@@ -33,14 +33,100 @@ namespace BitGo.Services
         public Task<WalletTransaction> GetTransactionBySequenceAsync(string sequenceId, CancellationToken cancellationToken = default(CancellationToken))
             => _client.GetAsync<WalletTransaction>($"{_url}/tx/sequence/{sequenceId}", true, cancellationToken);
 
+        public Task<TransactionResult> SendCoinsToAddressAsync(string address, long amount, string passphrase, string message = null, string sequenceId = null, long? fee = null, long? feeRate = null, int feeTxConfirmTarget = 2, int minConfirms = 1, bool enforceMinConfirmsForChange = true, long minUnspentSize = 5460, bool? instant = null, string otp = null, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return SendCoinsToMultipleAddressesAsync(new Dictionary<string, long>() { { address, amount } }, passphrase, message, sequenceId, fee, feeRate, feeTxConfirmTarget, minConfirms, enforceMinConfirmsForChange, minUnspentSize, instant, otp, cancellationToken);
+        }
+
+        public async Task<TransactionResult> SendCoinsToMultipleAddressesAsync(Dictionary<string, long> recepients, string passphrase, string message = null, string sequenceId = null, long? fee = null, long? feeRate = null, int feeTxConfirmTarget = 2, int minConfirms = 1, bool enforceMinConfirmsForChange = true, long minUnspentSize = 5460, bool? instant = null, string otp = null, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var unsignedTransaction = await CreateTransactionAsync(recepients, fee, feeRate, feeTxConfirmTarget, minConfirms, enforceMinConfirmsForChange, minUnspentSize, instant, cancellationToken);
+            var userKeychain = await _client.Keychains.GetAsync(unsignedTransaction.WalletKeychains[0].ExtendedPublicKey);
+            userKeychain.ExtendedPrivateKey = _client.Decrypt(userKeychain.EncryptedExtendedPrivateKey, passphrase);
+            var signedTransactionHex = SignTransaction(unsignedTransaction.TransactionHex, unsignedTransaction.Unspents, userKeychain);
+            Console.WriteLine(signedTransactionHex == unsignedTransaction.TransactionHex);
+            return null;
+            return await _client.Transaction.SendAsync(signedTransactionHex, sequenceId, message, instant, otp, cancellationToken);
+        }
+
+        public async Task<WalletUnsignedTransaction> CreateTransactionAsync(Dictionary<string, long> recepients, long? fee = null, long? feeRate = null, int feeTxConfirmTarget = 2, int minConfirms = 1, bool enforceMinConfirmsForChange = true, long minUnspentSize = 5460, bool? instant = null, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var hexEncoder = new NBitcoin.DataEncoders.HexEncoder();
+            var builder = new TransactionBuilder();
+            builder.DustPrevention = true;
+            var totalValue = recepients.Values.Sum();
+            var unspents = await GetUnspentListAsync(instant, totalValue, null, null, minUnspentSize, cancellationToken);
+            var changeAddress = await CreateAddressAsync(1, cancellationToken);
+            builder.SetChange(_client.Network.CreateBitcoinAddress(changeAddress.Address));
+            foreach (var unspent in unspents.Unspents)
+            {
+                builder.AddCoins(new Coin(new OutPoint(uint256.Parse(unspent.TransactionHash), unspent.TransactionOutputIndex), new TxOut(unspent.Value, new Script(hexEncoder.DecodeData(unspent.Script))))); //, new Script(hexEncoder.DecodeData(unspent.RedeemScript)))
+            }
+            foreach (var recipient in recepients)
+            {
+                builder.Send(_client.Network.CreateBitcoinAddress(recipient.Key), recipient.Value);
+            }
+            var billingFee = await GetBillingFeeAsync(totalValue, instant ?? false, cancellationToken);
+            if(billingFee > 0)
+            {
+                var billingAddress = await _client.Billing.GetAddressAsync(cancellationToken);
+                billingFee = (long)Math.Min(billingFee, totalValue * 0.002);
+                builder.Send(_client.Network.CreateBitcoinAddress(billingAddress), billingFee);
+            }
+            long finnalFee = 0;
+            if (fee.HasValue)
+            {
+                builder.SendFees(fee.Value);
+                finnalFee = fee.Value;
+            }
+            else if (feeRate.HasValue)
+            {
+                var estimatedFeeRate = new FeeRate(feeRate.Value);
+                builder.SendEstimatedFees(estimatedFeeRate);
+                finnalFee = builder.EstimateFees(estimatedFeeRate).Satoshi;
+            }
+            else
+            {
+                var estimateFee = await _client.Transaction.EstimateFeesAsync(feeTxConfirmTarget, cancellationToken);
+                var estimatedFeeRate = new FeeRate(estimateFee.FeePerKb);
+                builder.SendEstimatedFees(estimatedFeeRate);
+                finnalFee = builder.EstimateFees(estimatedFeeRate).Satoshi;                
+            }
+            
+            var transactionHex = builder.BuildTransaction(false).ToHex();
+            return new WalletUnsignedTransaction
+            {
+                WalletId = _id,
+                TransactionHex = transactionHex,
+                Fee = finnalFee,
+                ChangeAddress = new WalletUnsignedTransactionAddress { Address = changeAddress.Address, Path = changeAddress.Path },
+                WalletKeychains = (await GetAsync()).Keychains.Keychains.Select(k => new WalletUnsignedTransactionKeychain { ExtendedPublicKey = k.ExtendedPublicKey, Path = k.Path }).ToArray(),
+                Unspents = unspents.Unspents.Select(u => new WalletUnsignedTransactionUnspent { RedeemScript = u.RedeemScript, ChainPath = u.ChainPath }).ToArray()
+            };
+        }
+
+        public string SignTransaction(string transactionHex, WalletUnsignedTransactionUnspent[] unspents, Keychain userKeychain)
+        {
+            var hexEncoder = new NBitcoin.DataEncoders.HexEncoder();
+            var extKey = ExtKey.Parse(userKeychain.ExtendedPrivateKey);
+            var builder = new TransactionBuilder().ContinueToBuild(Transaction.Parse(transactionHex));
+            foreach (var unspent in unspents)
+            {
+                builder
+                     .AddKnownRedeems(new Script(hexEncoder.DecodeData(unspent.RedeemScript)))
+                     .AddKeys(extKey.Derive(KeyPath.Parse($"{userKeychain.Path}/0/0{unspent.ChainPath}")).PrivateKey);
+            }
+            return builder.BuildTransaction(true).ToHex();
+        }
+
         public Task<WalletAddressList> GetAddressListAsync(int? chain = null, int? skip = null, int? limit = null, CancellationToken cancellationToken = default(CancellationToken))
-            => _client.GetAsync<WalletAddressList>($"{_url}/addresses{_client.ConvertToQueryString(new Dictionary<string, object>() { { "chain", chain }, { "skip", skip }, { "limit", limit } })}", true, cancellationToken);
+            => _client.GetAsync<WalletAddressList>($"{_url}/address{_client.ConvertToQueryString(new Dictionary<string, object>() { { "chain", chain }, { "skip", skip }, { "limit", limit } })}", true, cancellationToken);
 
         public Task<WalletAddress> GetAddressAsync(string address, CancellationToken cancellationToken = default(CancellationToken))
-            => _client.GetAsync<WalletAddress>($"{_url}/addresses/{address}", true, cancellationToken);
+            => _client.GetAsync<WalletAddress>($"{_url}/address/{address}", true, cancellationToken);
 
         public Task<WalletAddress> CreateAddressAsync(int chain = 0, CancellationToken cancellationToken = default(CancellationToken))
-            => _client.PostAsync<WalletAddress>($"{_url}/addresses/{chain}", null, cancellationToken);
+            => _client.PostAsync<WalletAddress>($"{_url}/address/{chain}", null, cancellationToken);
 
         public Task<WalletUnspentList> GetUnspentListAsync(bool? instant = null, long? target = null, int? skip = null, int? limit = null, long? minSize = null, CancellationToken cancellationToken = default(CancellationToken))
             => _client.GetAsync<WalletUnspentList>($"{_url}/unspents{_client.ConvertToQueryString(new Dictionary<string, object>() { { "instant", instant }, { "target", target }, { "skip", skip }, { "limit", limit }, { "minSize", minSize }, })}", true, cancellationToken);
@@ -61,7 +147,7 @@ namespace BitGo.Services
                 Action = new SetPolicyRuleActionArgs
                 {
                     Type = action,
-                    ActionParams = actionParams == null ? null : new SetPolicyRuleActionParamsArgs 
+                    ActionParams = actionParams == null ? null : new SetPolicyRuleActionParamsArgs
                     {
                         OtpType = actionParams.OtpType,
                         Phone = actionParams.Phone,
@@ -82,7 +168,7 @@ namespace BitGo.Services
                 Action = new SetPolicyRuleActionArgs
                 {
                     Type = action,
-                    ActionParams = actionParams == null ? null : new SetPolicyRuleActionParamsArgs 
+                    ActionParams = actionParams == null ? null : new SetPolicyRuleActionParamsArgs
                     {
                         OtpType = actionParams.OtpType,
                         Phone = actionParams.Phone,
@@ -103,7 +189,7 @@ namespace BitGo.Services
                 Action = new SetPolicyRuleActionArgs
                 {
                     Type = action,
-                    ActionParams = actionParams == null ? null : new SetPolicyRuleActionParamsArgs 
+                    ActionParams = actionParams == null ? null : new SetPolicyRuleActionParamsArgs
                     {
                         OtpType = actionParams.OtpType,
                         Phone = actionParams.Phone,
@@ -124,7 +210,7 @@ namespace BitGo.Services
                 Action = new SetPolicyRuleActionArgs
                 {
                     Type = action,
-                    ActionParams = actionParams == null ? null : new SetPolicyRuleActionParamsArgs 
+                    ActionParams = actionParams == null ? null : new SetPolicyRuleActionParamsArgs
                     {
                         OtpType = actionParams.OtpType,
                         Phone = actionParams.Phone,
@@ -145,7 +231,7 @@ namespace BitGo.Services
                 Action = new SetPolicyRuleActionArgs
                 {
                     Type = action,
-                    ActionParams = actionParams == null ? null : new SetPolicyRuleActionParamsArgs 
+                    ActionParams = actionParams == null ? null : new SetPolicyRuleActionParamsArgs
                     {
                         OtpType = actionParams.OtpType,
                         Phone = actionParams.Phone,

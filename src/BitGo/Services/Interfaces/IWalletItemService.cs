@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using BitGo.Types;
@@ -19,6 +20,14 @@ namespace BitGo.Services
         Task<WalletTransaction> GetTransactionAsync(string hash, CancellationToken cancellationToken = default(CancellationToken));
 
         Task<WalletTransaction> GetTransactionBySequenceAsync(string sequenceId, CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<TransactionResult> SendCoinsToAddressAsync(string address, long amount, string passphrase, string message = null, string sequenceId = null, long? fee = null, long? feeRate = null, int feeTxConfirmTarget = 2, int minConfirms = 1, bool enforceMinConfirmsForChange = true, long minUnspentSize = 5460, bool? instant = null, string otp = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<TransactionResult> SendCoinsToMultipleAddressesAsync(Dictionary<string, long> recepients, string passphrase, string message = null, string sequenceId = null, long? fee = null, long? feeRate = null, int feeTxConfirmTarget = 2, int minConfirms = 1, bool enforceMinConfirmsForChange = true, long minUnspentSize = 5460, bool? instant = null, string otp = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<WalletUnsignedTransaction> CreateTransactionAsync(Dictionary<string, long> recepients, long? fee = null, long? feeRate = null, int feeTxConfirmTarget = 2, int minConfirms = 1, bool enforceMinConfirmsForChange = true, long minUnspentSize = 5460, bool? instant = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        string SignTransaction(string transactionHex, WalletUnsignedTransactionUnspent[] unspents, Keychain userKeychain);
 
         Task<WalletAddressList> GetAddressListAsync(int? chain = null, int? skip = null, int? limit = null, CancellationToken cancellationToken = default(CancellationToken));
 

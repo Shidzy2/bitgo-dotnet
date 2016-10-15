@@ -7,18 +7,18 @@ namespace BitGo.Types {
     public class Keychain {
 
         [JsonProperty("xpub", Required = Required.Always)]
-        public string ExtendedPublicKey { get; internal set; }
+        public string ExtendedPublicKey { get; set; }
 
         [JsonProperty("encryptedXprv", Required = Required.Default)]
         public string EncryptedExtendedPrivateKey { get; internal set; }
 
         [JsonProperty("path", Required = Required.Default)]
-        public string Path { get; internal set; }
+        public string Path { get; set; }
 
         [JsonProperty("isBitGo", Required = Required.Default)]
         public bool IsBitGo { get; internal set; }
         
         [JsonIgnore]
-        public string ExtendedPrivateKey { get; internal set; }
+        public string ExtendedPrivateKey { get; set; }
     }
 }

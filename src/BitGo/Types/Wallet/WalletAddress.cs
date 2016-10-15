@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BitGo.Types
 {
-
+    [JsonObject(MemberSerialization.OptIn)]
     public class WalletAddress
     {
         [JsonProperty("address")]

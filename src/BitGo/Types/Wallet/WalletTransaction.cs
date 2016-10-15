@@ -8,6 +8,7 @@ using NBitcoin;
 
 namespace BitGo.Types
 {
+    [JsonObject(MemberSerialization.OptIn)]
     public class WalletTransaction
     {
         [JsonProperty("id")]
