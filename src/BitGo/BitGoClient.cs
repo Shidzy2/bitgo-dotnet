@@ -195,7 +195,7 @@ namespace BitGo
 
         public string Encrypt(string input, string password)
         {
-            throw new NotImplementedException();
+            return new SjclEncryptor(input, password).EncryptedText;
         }
 
 

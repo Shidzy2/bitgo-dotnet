@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 namespace BitGo.Args {
     
     [JsonObject(MemberSerialization.OptIn)]
-    public class SetPolicyRuleActionParamsArgs {
+    internal class SetPolicyRuleActionParamsArgs {
         [JsonProperty("otpType", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
         public string OtpType { get; internal set; }
 

@@ -12,6 +12,7 @@ namespace ConsoleApplication
     {
         public static void Main(string[] args)
         {
+            Console.WriteLine(Convert.FromBase64String("LXlRRxUav8Q=").Length);
             var builder = new ConfigurationBuilder()
                                 .SetBasePath(Directory.GetCurrentDirectory())
                                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
@@ -20,18 +21,19 @@ namespace ConsoleApplication
         }
 
         private static async Task RunAsync(IConfigurationRoot configuration) {
-            var bitGoClient = new BitGoClient(BitGoNetwork.Main, configuration["Token"]);
-            // var user = await bitGoClient.Users.LoginAsync("", "", "");
-            // bitGoClient.SetAccessToken(user.AccessToken);
+            var bitGoClient = new BitGoClient(BitGoNetwork.Main); //, configuration["Token"]
+            var user = await bitGoClient.User.LoginAsync(Console.ReadLine(), Console.ReadLine(), Console.ReadLine());
+            bitGoClient.SetAccessToken(user.AccessToken);
+            await bitGoClient.User.UnlockAsync(Console.ReadLine());
             // var session = await bitGoClient.Users.GetSessionAsync();
             // Console.WriteLine(session.Client);
-            var wallets = await bitGoClient.Wallets.GetListAsync();
-            Console.WriteLine(wallets.Start);
-            Console.WriteLine(wallets.Count);
-            Console.WriteLine(wallets.Total);
-            foreach(var k in wallets.Wallets) {
+            var keychains = await bitGoClient.Keychains.GetListAsync();
+            // Console.WriteLine(wallets.Start);
+            // Console.WriteLine(wallets.Count);
+            // Console.WriteLine(wallets.Total);
+            foreach(var k in keychains.Keychains) {
                 // Console.WriteLine(k.ExtendedPublicKey);
-                Console.WriteLine(JsonConvert.SerializeObject(await bitGoClient.Wallets[k.Id].GetAsync()));
+                Console.WriteLine((await bitGoClient.Keychains.GetAsync(k.ExtendedPublicKey)).EncryptedExtendedPrivateKey);
             }
         }
     }
