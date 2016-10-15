@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
@@ -54,7 +55,7 @@ namespace BitGo.Helpers.Sjcl
 
             var cipher = new CcmBlockCipher(new AesFastEngine());
             var parameters = new CcmParameters(
-                new KeyParameter(key), _ts, iv, nonSecretPayload);
+                new KeyParameter(key), _ts, iv.Take(13).ToArray(), nonSecretPayload);
             cipher.Init(false, parameters);
 
             var plainText = new byte[cipher.GetOutputSize(ct.Length)];
@@ -67,7 +68,7 @@ namespace BitGo.Helpers.Sjcl
             var random = RandomNumberGenerator.Create();
             var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
             var adata = new byte[0];
-            var iv = new byte[12];
+            var iv = new byte[16];
             var salt = new byte[8];
             random.GetBytes(iv);
             random.GetBytes(salt);
@@ -77,7 +78,7 @@ namespace BitGo.Helpers.Sjcl
 
             var cipher = new CcmBlockCipher(new AesFastEngine());
             var parameters = new CcmParameters(
-                new KeyParameter(key), _ts, iv, nonSecretPayload);
+                new KeyParameter(key), _ts, iv.Take(13).ToArray(), nonSecretPayload);
             cipher.Init(true, parameters);
 
             var cipherText = new byte[cipher.GetOutputSize(plainTextBytes.Length)];
