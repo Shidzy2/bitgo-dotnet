@@ -15,7 +15,7 @@ namespace BitGo.Services
         }
 
         public Task<MarketData> GetAsync(CancellationToken cancellationToken = default(CancellationToken)) 
-            => _client.GetAsync<MarketData>($"{_url}/latest", true, cancellationToken);
+            => _client.GetAsync<MarketData>($"{_url}/latest", false, cancellationToken);
         
     }
 }

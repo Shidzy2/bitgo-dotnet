@@ -60,6 +60,8 @@ namespace BitGo
 
         private readonly IPendingApprovalService _pendingApprovalService;
 
+        private readonly SjclManaged _sjcl;
+
 
         internal Network Network
         {
@@ -170,6 +172,9 @@ namespace BitGo
             {
                 _token = ConvertToSecureString(token);
             }
+
+            _sjcl = new SjclManaged();
+
             _keychainService = new KeychainService(this);
             _walletService = new WalletService(this);
             _walletAddressService = new WalletAddressService(this);
@@ -190,12 +195,12 @@ namespace BitGo
 
         public string Decrypt(string input, string password)
         {
-            return new SjclManaged().Decrypt(input, password);
+            return _sjcl.Decrypt(input, password);
         }
 
         public string Encrypt(string input, string password)
         {
-            return new SjclManaged().Encrypt(input, password);
+            return _sjcl.Encrypt(input, password);
         }
 
 

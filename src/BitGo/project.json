@@ -28,21 +28,17 @@
                 "NETStandard.Library": "1.6.0",
                 "System.Security.SecureString": "4.0.0",
                 "System.Security.Cryptography.Algorithms": "4.2.0"
-            },
-            "imports": [
-                "dnxcore50",
-                "portable-net45+win8"
-            ]
+            }
         },
         "net461": {
             "System.Threading.Tasks": ""
         }
     },
     "dependencies": {
-        "NBitcoin": "3.0.0.9",
+        "NBitcoin": "3.0.0.62",
         "CoreCompat.BouncyCastle": "1.8.1-beta003",
         "Newtonsoft.Json": "9.0.1",
-        "Microsoft.Net.Http": "2.2.29"
+        "System.Net.Http": "4.1.0"
     },
     "buildOptions": {
         "xmlDoc": true

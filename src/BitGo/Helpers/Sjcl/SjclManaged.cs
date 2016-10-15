@@ -13,40 +13,32 @@ namespace BitGo.Helpers.Sjcl
 {
     internal class SjclManaged
     {
-        private readonly int _v = 1;
 
-        private readonly int _iter = 10000;
-
-        private readonly int _ks = 256;
-
-        private readonly int _ts = 64;
-        
-        private readonly string _mode = "ccm";
-
-        private readonly string _cipher = "aes";
+        private readonly RandomNumberGenerator _random;
 
         public SjclManaged()
         {
-            
+            _random = RandomNumberGenerator.Create();
         }
 
         private byte[] GenKeyBytes(string aPW, byte[] salt, int ks, int iter)
         {
             byte[] pw = Encoding.UTF8.GetBytes(aPW);
-            PBKDF2HMACSHA256 k = new PBKDF2HMACSHA256(pw, salt, iter);
-            return k.GetBytes(ks/8);
+            var k = new PBKDF2HMACSHA256(pw, salt, iter);
+            return k.GetBytes(ks / 8);
         }
 
-        public string Decrypt(string encryptedText, string password) {
-            var json = JsonConvert.DeserializeObject<SjclJson>(encryptedText);
-            var v = json.V;
-            var adata = Convert.FromBase64String(json.AData);
-            var iv = Convert.FromBase64String(json.IV);
-            var salt = Convert.FromBase64String(json.Salt);
-            var ks = json.KS;
-            var ts = json.TS;
-            var iter = json.Iter;
-            var ct = Convert.FromBase64String(json.CT);
+        public string Decrypt(string json, string password)
+        {
+            var jsonObj = JsonConvert.DeserializeObject<SjclJson>(json);
+            var v = jsonObj.V;
+            var adata = Convert.FromBase64String(jsonObj.AData);
+            var iv = Convert.FromBase64String(jsonObj.IV);
+            var salt = Convert.FromBase64String(jsonObj.Salt);
+            var ks = jsonObj.KS;
+            var ts = jsonObj.TS;
+            var iter = jsonObj.Iter;
+            var ct = Convert.FromBase64String(jsonObj.CT);
             // var cipher = json.Cipher;
             // var mode = json.Mode;
             var key = GenKeyBytes(password, salt, ks, iter);
@@ -55,7 +47,7 @@ namespace BitGo.Helpers.Sjcl
 
             var cipher = new CcmBlockCipher(new AesFastEngine());
             var parameters = new CcmParameters(
-                new KeyParameter(key), _ts, iv.Take(13).ToArray(), nonSecretPayload);
+                new KeyParameter(key), ts, iv.Take(13).ToArray(), nonSecretPayload);
             cipher.Init(false, parameters);
 
             var plainText = new byte[cipher.GetOutputSize(ct.Length)];
@@ -64,37 +56,46 @@ namespace BitGo.Helpers.Sjcl
             return Encoding.UTF8.GetString(plainText);
         }
 
-        public string Encrypt(string plainText, string password) {
-            var random = RandomNumberGenerator.Create();
+        public string Encrypt(string plainText, string password)
+        {
+
+            var v = 1;
+            var iter = 10000;
+            var ks = 256;
+            var ts = 64;
+            // var mode = "ccm";
+            // var cipher = "aes";
+
             var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
             var adata = new byte[0];
             var iv = new byte[16];
             var salt = new byte[8];
-            random.GetBytes(iv);
-            random.GetBytes(salt);
-            var key = GenKeyBytes(password, salt, _ks, _iter);
+            _random.GetBytes(iv);
+            _random.GetBytes(salt);
+            var key = GenKeyBytes(password, salt, ks, iter);
 
             var nonSecretPayload = new byte[] { };
 
             var cipher = new CcmBlockCipher(new AesFastEngine());
             var parameters = new CcmParameters(
-                new KeyParameter(key), _ts, iv.Take(13).ToArray(), nonSecretPayload);
+                new KeyParameter(key), ts, iv.Take(13).ToArray(), nonSecretPayload);
             cipher.Init(true, parameters);
 
             var cipherText = new byte[cipher.GetOutputSize(plainTextBytes.Length)];
             var len = cipher.ProcessBytes(plainTextBytes, 0, plainTextBytes.Length, cipherText, 0);
             cipher.DoFinal(cipherText, len);
-            return JsonConvert.SerializeObject(new SjclJson {
-                    IV = Convert.ToBase64String(iv),
-                    V = _v,
-                    Iter = _iter,
-                    KS = _ks,
-                    TS = _ts,
-                    Mode = _mode,
-                    AData = Convert.ToBase64String(adata),
-                    Cipher = _cipher,
-                    Salt = Convert.ToBase64String(salt),
-                    CT = Convert.ToBase64String(cipherText),
+            return JsonConvert.SerializeObject(new SjclJson
+            {
+                IV = Convert.ToBase64String(iv),
+                V = v,
+                Iter = iter,
+                KS = ks,
+                TS = ts,
+                Mode = "ccm",
+                Cipher = "aes",
+                AData = Convert.ToBase64String(adata),
+                Salt = Convert.ToBase64String(salt),
+                CT = Convert.ToBase64String(cipherText),
             });
         }
 
