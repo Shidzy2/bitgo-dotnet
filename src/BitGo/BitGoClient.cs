@@ -249,7 +249,6 @@ namespace BitGo
             using (var client = GetHttpClient(authenticated))
             {
                 var response = await client.GetAsync($"{url}", cancellationToken);
-                Console.WriteLine(response.RequestMessage.RequestUri); //TODO remove
                 var content = await response.Content.ReadAsStringAsync();
 
                 try
@@ -282,7 +281,6 @@ namespace BitGo
             {
                 var data = JsonConvert.SerializeObject(obj ?? new object());
                 var response = await client.PostAsync($"{url}",  new StringContent(data, Encoding.UTF8, "application/json"), cancellationToken);
-                Console.WriteLine(response.RequestMessage.RequestUri); //TODO remove
                 var content = await response.Content.ReadAsStringAsync();
                 try
                 {
@@ -314,7 +312,6 @@ namespace BitGo
             {
                 var data = JsonConvert.SerializeObject(obj ?? new object());
                 var response = await client.PutAsync($"{url}",  new StringContent(data, Encoding.UTF8, "application/json"), cancellationToken);
-                Console.WriteLine(response.RequestMessage.RequestUri); //TODO remove
                 var content = await response.Content.ReadAsStringAsync();
                 try
                 {
@@ -348,7 +345,6 @@ namespace BitGo
                 var data = JsonConvert.SerializeObject(obj ?? new object());
                 request.Content = new StringContent(data, Encoding.UTF8, "application/json");
                 var response = await client.SendAsync(request, cancellationToken);
-                Console.WriteLine(response.RequestMessage.RequestUri); //TODO remove
                 var content = await response.Content.ReadAsStringAsync();
                 try
                 {

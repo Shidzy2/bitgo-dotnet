@@ -16,6 +16,18 @@ namespace BitGo.Types
 
         [JsonProperty("redeemScript")]
         public string RedeemScript { get; set; }
+
+        [JsonProperty("script")]
+        public string Script { get; set; }
+
+        [JsonProperty("transactionOutputIndex")]
+        public int TransactionOutputIndex { get; set; }
+
+        [JsonProperty("transactionHash")]
+        public string TransactionHash { get; set; }
+
+        [JsonProperty("value")]
+        public long Value { get; set; }
     }
 
     [JsonObject(MemberSerialization.OptIn)]

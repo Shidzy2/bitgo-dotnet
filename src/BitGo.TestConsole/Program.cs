@@ -20,7 +20,11 @@ namespace ConsoleApplication
         }
 
         private static async Task RunAsync(IConfigurationRoot configuration) {
-            var bitGoClient = new BitGoClient(BitGoNetwork.Main, configuration["Token"]);
+            var bitGoClient = new BitGoClient(BitGoNetwork.Main);//, configuration["Token"]
+            var user = await bitGoClient.User.LoginAsync(Console.ReadLine(), Console.ReadLine(), Console.ReadLine());
+            bitGoClient.SetAccessToken(user.AccessToken);
+            await bitGoClient.User.UnlockAsync(Console.ReadLine());
+
             // var encrypted = bitGoClient.Encrypt(new NBitcoin.ExtKey().GetWif(NBitcoin.Network.Main).ToString(), "Asdfasdfasdf!!");
             // var decrypted = bitGoClient.Decrypt(encrypted, "Asdfasdfasdf!!");
             // Console.WriteLine(encrypted);

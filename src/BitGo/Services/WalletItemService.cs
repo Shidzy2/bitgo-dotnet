@@ -44,8 +44,6 @@ namespace BitGo.Services
             var userKeychain = await _client.Keychains.GetAsync(unsignedTransaction.WalletKeychains[0].ExtendedPublicKey);
             userKeychain.ExtendedPrivateKey = _client.Decrypt(userKeychain.EncryptedExtendedPrivateKey, passphrase);
             var signedTransactionHex = SignTransaction(unsignedTransaction.TransactionHex, unsignedTransaction.Unspents, userKeychain);
-            Console.WriteLine(signedTransactionHex == unsignedTransaction.TransactionHex);
-            return null;
             return await _client.Transaction.SendAsync(signedTransactionHex, sequenceId, message, instant, otp, cancellationToken);
         }
 
@@ -60,7 +58,7 @@ namespace BitGo.Services
             builder.SetChange(_client.Network.CreateBitcoinAddress(changeAddress.Address));
             foreach (var unspent in unspents.Unspents)
             {
-                builder.AddCoins(new Coin(new OutPoint(uint256.Parse(unspent.TransactionHash), unspent.TransactionOutputIndex), new TxOut(unspent.Value, new Script(hexEncoder.DecodeData(unspent.Script))))); //, new Script(hexEncoder.DecodeData(unspent.RedeemScript)))
+                builder.AddCoins(new ScriptCoin(new OutPoint(uint256.Parse(unspent.TransactionHash), unspent.TransactionOutputIndex), new TxOut(unspent.Value, new Script(hexEncoder.DecodeData(unspent.Script))), new Script(hexEncoder.DecodeData(unspent.RedeemScript))));
             }
             foreach (var recipient in recepients)
             {
@@ -101,7 +99,7 @@ namespace BitGo.Services
                 Fee = finnalFee,
                 ChangeAddress = new WalletUnsignedTransactionAddress { Address = changeAddress.Address, Path = changeAddress.Path },
                 WalletKeychains = (await GetAsync()).Keychains.Keychains.Select(k => new WalletUnsignedTransactionKeychain { ExtendedPublicKey = k.ExtendedPublicKey, Path = k.Path }).ToArray(),
-                Unspents = unspents.Unspents.Select(u => new WalletUnsignedTransactionUnspent { RedeemScript = u.RedeemScript, ChainPath = u.ChainPath }).ToArray()
+                Unspents = unspents.Unspents.Select(u => new WalletUnsignedTransactionUnspent { RedeemScript = u.RedeemScript, Script = u.Script, ChainPath = u.ChainPath, TransactionHash = u.TransactionHash, TransactionOutputIndex = u.TransactionOutputIndex, Value = u.Value }).ToArray()
             };
         }
 
@@ -113,7 +111,7 @@ namespace BitGo.Services
             foreach (var unspent in unspents)
             {
                 builder
-                     .AddKnownRedeems(new Script(hexEncoder.DecodeData(unspent.RedeemScript)))
+                     .AddCoins(new ScriptCoin(new OutPoint(uint256.Parse(unspent.TransactionHash), unspent.TransactionOutputIndex), new TxOut(unspent.Value, new Script(hexEncoder.DecodeData(unspent.Script))), new Script(hexEncoder.DecodeData(unspent.RedeemScript))))
                      .AddKeys(extKey.Derive(KeyPath.Parse($"{userKeychain.Path}/0/0{unspent.ChainPath}")).PrivateKey);
             }
             return builder.BuildTransaction(true).ToHex();
