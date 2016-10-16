@@ -24,7 +24,7 @@ namespace ConsoleApplication
             var user = await bitGoClient.User.LoginAsync(Console.ReadLine(), Console.ReadLine(), Console.ReadLine());
             bitGoClient.SetAccessToken(user.AccessToken);
             await bitGoClient.User.UnlockAsync(Console.ReadLine());
-
+            return;
             // var encrypted = bitGoClient.Encrypt(new NBitcoin.ExtKey().GetWif(NBitcoin.Network.Main).ToString(), "Asdfasdfasdf!!");
             // var decrypted = bitGoClient.Decrypt(encrypted, "Asdfasdfasdf!!");
             // Console.WriteLine(encrypted);
