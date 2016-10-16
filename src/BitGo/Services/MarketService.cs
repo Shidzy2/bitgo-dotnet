@@ -10,7 +10,7 @@ namespace BitGo.Services
 {
     public sealed class MarketService : ApiService, IMarketService {
         
-        internal MarketService(BitGoClient client) : base(client, "instant") {
+        internal MarketService(BitGoClient client) : base(client, "market") {
 
         }
 
