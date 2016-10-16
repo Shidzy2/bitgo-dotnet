@@ -1,6 +1,7 @@
 # BitGo Api Library
 
 [![Build Status](https://travis-ci.org/playhubdev/bitgo-dotnet.svg?branch=master)](https://travis-ci.org/playhubdev/bitgo-dotnet)
+[![Build status](https://ci.appveyor.com/api/projects/status/5b4kgqt874b86g6q/branch/master?svg=true)](https://ci.appveyor.com/project/bdangh/bitgo-dotnet/branch/master)
 [![license](https://img.shields.io/github/license/playhubdev/bitgo-dotnet.svg?maxAge=2592000)](https://raw.githubusercontent.com/playhubdev/bitgo-dotnet/master/LICENSE.txt)
 
 C# library to talk to BitGo's [Platform API](https://www.bitgo.com/api)
