@@ -9,13 +9,13 @@ using NBitcoin;
 
 namespace BitGo.Services
 {
-    public sealed class WalletItemService : ApiService, IWalletItemService
+    public sealed class WalletItemService : ApiService
     {
 
-        private readonly IWalletService _walletService;
+        private readonly WalletService _walletService;
         private readonly string _id;
 
-        internal WalletItemService(BitGoClient client, IWalletService walletService, string id) : base(client, $"wallet/{id}")
+        internal WalletItemService(BitGoClient client, WalletService walletService, string id) : base(client, $"wallet/{id}")
         {
             _walletService = walletService;
             _id = id;
@@ -44,7 +44,7 @@ namespace BitGo.Services
             var userKeychain = await _client.Keychains.GetAsync(unsignedTransaction.WalletKeychains[0].ExtendedPublicKey);
             userKeychain.ExtendedPrivateKey = _client.Decrypt(userKeychain.EncryptedExtendedPrivateKey, passphrase);
             var signedTransactionHex = SignTransaction(unsignedTransaction.TransactionHex, unsignedTransaction.Unspents, userKeychain);
-            return await _client.Transaction.SendAsync(signedTransactionHex, sequenceId, message, instant, otp, cancellationToken);
+            return await _client.Transactions.SendAsync(signedTransactionHex, sequenceId, message, instant, otp, cancellationToken);
         }
 
         public async Task<WalletUnsignedTransaction> CreateTransactionAsync(Dictionary<string, long> recepients, long? fee = null, long? feeRate = null, int feeTxConfirmTarget = 2, int minConfirms = 1, bool enforceMinConfirmsForChange = true, long minUnspentSize = 5460, bool? instant = null, CancellationToken cancellationToken = default(CancellationToken))
@@ -85,7 +85,7 @@ namespace BitGo.Services
             }
             else
             {
-                var estimateFee = await _client.Transaction.EstimateFeesAsync(feeTxConfirmTarget, cancellationToken);
+                var estimateFee = await _client.Transactions.EstimateFeesAsync(feeTxConfirmTarget, cancellationToken);
                 var estimatedFeeRate = new FeeRate(estimateFee.FeePerKb);
                 builder.SendEstimatedFees(estimatedFeeRate);
                 finnalFee = builder.EstimateFees(estimatedFeeRate).Satoshi;                

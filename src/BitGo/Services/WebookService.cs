@@ -8,7 +8,7 @@ using NBitcoin;
 
 namespace BitGo.Services
 {
-    public sealed class WebhookService : ApiService, IWebhookService {
+    public sealed class WebhookService : ApiService {
         
         internal WebhookService(BitGoClient client) : base(client, "webhooks") {
 

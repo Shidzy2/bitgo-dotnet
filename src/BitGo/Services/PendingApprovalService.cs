@@ -8,7 +8,7 @@ using NBitcoin;
 
 namespace BitGo.Services
 {
-    public sealed class PendingApprovalService : ApiService, IPendingApprovalService {
+    public sealed class PendingApprovalService : ApiService {
         
         internal PendingApprovalService(BitGoClient client) : base(client, "pendingapprovals") {
 

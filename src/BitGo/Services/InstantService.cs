@@ -13,7 +13,7 @@ namespace BitGo.Services
     /// due to a financial guarantee by BitGo against double-spending. Anyone can receive BitGo Instant transactions. 
     /// In order to send BitGo Instant transactions, you will need either a BitGo KRS wallet, or will need to arrange a collateral agreement with BitGo.
     /// </summary>
-    public sealed class InstantService : ApiService, IInstantService {
+    public sealed class InstantService : ApiService {
         
         internal InstantService(BitGoClient client) : base(client, "instant") {
 

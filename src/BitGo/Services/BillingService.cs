@@ -8,7 +8,7 @@ using NBitcoin;
 
 namespace BitGo.Services
 {
-    public sealed class BillingService : ApiService, IBillingService {
+    public sealed class BillingService : ApiService {
         
         internal BillingService(BitGoClient client) : base(client, "billing") {
 

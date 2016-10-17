@@ -8,7 +8,7 @@ using NBitcoin;
 
 namespace BitGo.Services
 {
-    public sealed class WalletAddressService : ApiService, IWalletAddressService {
+    public sealed class WalletAddressService : ApiService {
         
         internal WalletAddressService(BitGoClient client) : base(client, "walletaddress") {
 
