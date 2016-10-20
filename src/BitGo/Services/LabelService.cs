@@ -8,7 +8,7 @@ using NBitcoin;
 
 namespace BitGo.Services
 {
-    public sealed class LabelService : ApiService, ILabelService {
+    public sealed class LabelService : ApiService {
         
         internal LabelService(BitGoClient client) : base(client, "labels") {
 

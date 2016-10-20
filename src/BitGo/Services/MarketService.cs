@@ -8,7 +8,7 @@ using NBitcoin;
 
 namespace BitGo.Services
 {
-    public sealed class MarketService : ApiService, IMarketService {
+    public sealed class MarketService : ApiService {
         
         internal MarketService(BitGoClient client) : base(client, "market") {
 

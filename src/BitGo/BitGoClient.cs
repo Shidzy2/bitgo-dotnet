@@ -38,28 +38,6 @@ namespace BitGo
         private SecureString _token;
         private readonly BitGoNetwork _network;
 
-        private readonly IKeychainService _keychainService;
-
-        private readonly IWalletService _walletService;
-
-        private readonly IWalletAddressService _walletAddressService;
-
-        private readonly IUserService _userService;
-
-        private readonly IBillingService _billingService;
-
-        private readonly IInstantService _instantService;
-
-        private readonly IMarketService _marketService;
-
-        private readonly ITransactionService _transactionService;
-
-        private readonly ILabelService _labelService;
-
-        private readonly IWebhookService _webhookService;
-
-        private readonly IPendingApprovalService _pendingApprovalService;
-
         private readonly SjclManaged _sjcl;
 
 
@@ -71,93 +49,27 @@ namespace BitGo
             }
         }
 
-        public IKeychainService Keychains
-        {
-            get
-            {
-                return _keychainService;
-            }
-        }
+        public KeychainService Keychains { get; private set; }
 
-        public IWalletService Wallets
-        {
-            get
-            {
-                return _walletService;
-            }
-        }
+        public WalletService Wallets { get; private set; }
 
-        public IWalletAddressService WalletAddresses
-        {
-            get
-            {
-                return _walletAddressService;
-            }
-        }
+        public WalletAddressService WalletAddresses { get; private set; }
 
-        public IUserService User
-        {
-            get
-            {
-                return _userService;
-            }
-        }
+        public UserService User { get; private set; }
 
-        public IBillingService Billing 
-        {
-            get
-            {
-                return _billingService;
-            }
-        }
+        public BillingService Billing { get; private set; }
 
-        public IInstantService Instant 
-        {
-            get
-            {
-                return _instantService;
-            }
-        }
+        public InstantService Instant { get; private set; }
 
-        public ITransactionService Transaction 
-        {
-            get
-            {
-                return _transactionService;
-            }
-        }
+        public TransactionService Transactions { get; private set; }
 
-        public ILabelService Labels 
-        {
-            get
-            {
-                return _labelService;
-            }
-        }
+        public LabelService Labels { get; private set; }
 
-        public IMarketService Market 
-        {
-            get
-            {
-                return _marketService;
-            }
-        }
+        public MarketService Market { get; private set; }
 
-        public IWebhookService Webhooks 
-        {
-            get
-            {
-                return _webhookService;
-            }
-        }
+        public WebhookService Webhooks { get; private set; }
 
-        public IPendingApprovalService PendingApprovals
-        {
-            get
-            {
-                return _pendingApprovalService;
-            }
-        }
+        public PendingApprovalService PendingApprovals { get; private set; }
 
         public BitGoClient(string token = null) : this(BitGoNetwork.Main, token)
         {
@@ -175,17 +87,17 @@ namespace BitGo
 
             _sjcl = new SjclManaged();
 
-            _keychainService = new KeychainService(this);
-            _walletService = new WalletService(this);
-            _walletAddressService = new WalletAddressService(this);
-            _userService = new UserService(this);
-            _labelService = new LabelService(this);
-            _marketService = new MarketService(this);
-            _transactionService = new TransactionService(this);
-            _instantService = new InstantService(this);
-            _billingService = new BillingService(this);
-            _webhookService = new WebhookService(this);
-            _pendingApprovalService = new PendingApprovalService(this);
+            Keychains = new KeychainService(this);
+            Wallets = new WalletService(this);
+            WalletAddresses = new WalletAddressService(this);
+            User = new UserService(this);
+            Labels = new LabelService(this);
+            Market = new MarketService(this);
+            Transactions = new TransactionService(this);
+            Instant = new InstantService(this);
+            Billing = new BillingService(this);
+            Webhooks = new WebhookService(this);
+            PendingApprovals = new PendingApprovalService(this);
         }
 
         public void SetAccessToken(string token)

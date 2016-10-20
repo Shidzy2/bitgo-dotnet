@@ -8,7 +8,7 @@ using NBitcoin;
 
 namespace BitGo.Services
 {
-    public sealed class TransactionService : ApiService, ITransactionService {
+    public sealed class TransactionService : ApiService {
         
         internal TransactionService(BitGoClient client) : base(client, "tx") {
 

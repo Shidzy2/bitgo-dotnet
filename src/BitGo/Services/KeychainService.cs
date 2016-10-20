@@ -8,7 +8,7 @@ using NBitcoin;
 
 namespace BitGo.Services
 {
-    public sealed class KeychainService : ApiService, IKeychainService {
+    public sealed class KeychainService : ApiService {
         
         internal KeychainService(BitGoClient client) : base(client, "keychain") {
 

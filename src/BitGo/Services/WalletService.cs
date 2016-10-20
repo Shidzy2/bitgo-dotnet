@@ -9,10 +9,10 @@ using NBitcoin;
 
 namespace BitGo.Services
 {
-    public sealed class WalletService : ApiService, IWalletService
+    public sealed class WalletService : ApiService
     {
 
-        public IWalletItemService this[string id]
+        public WalletItemService this[string id]
         {
             get
             {

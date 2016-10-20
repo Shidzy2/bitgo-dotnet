@@ -12,26 +12,26 @@ namespace BitGo
     /// </summary>
     public interface IBitGoClient
     {
-        IWalletService Wallets { get; }
+        WalletService Wallets { get; }
 
-        IWalletAddressService WalletAddresses { get; }
+        WalletAddressService WalletAddresses { get; }
 
-        IKeychainService Keychains { get; } 
+        KeychainService Keychains { get; } 
 
-        IUserService User { get; } 
+        UserService User { get; } 
 
-        IBillingService Billing { get; }
+        BillingService Billing { get; }
 
-        IInstantService Instant { get; }
+        InstantService Instant { get; }
 
-        ITransactionService Transaction { get; }
+        TransactionService Transactions { get; }
 
-        ILabelService Labels { get; }
+        LabelService Labels { get; }
 
-        IMarketService Market { get; }
+        MarketService Market { get; }
 
-        IWebhookService Webhooks { get; }
+        WebhookService Webhooks { get; }
 
-        IPendingApprovalService PendingApprovals { get; }
+        PendingApprovalService PendingApprovals { get; }
     }
 }

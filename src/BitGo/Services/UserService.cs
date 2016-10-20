@@ -10,7 +10,7 @@ using System.Text;
 
 namespace BitGo.Services
 {
-    public sealed class UserService : ApiService, IUserService {
+    public sealed class UserService : ApiService {
         
         internal UserService(BitGoClient client) : base(client, "user") {
 
