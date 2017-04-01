@@ -14,4 +14,4 @@ matrix:
 
 script:
   - dotnet restore
-  - dotnet build ./src/BitGo -f .NETStandard,Version=v1.6
+  - dotnet build ./src/BitGo
