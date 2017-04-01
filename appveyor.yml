@@ -1,7 +1,5 @@
 version: '0.1.{build}'
-configuration:
-- Debug
-- Release
+configuration: Release
 platform: Any CPU
 environment:
   # Don't report back to the mothership
