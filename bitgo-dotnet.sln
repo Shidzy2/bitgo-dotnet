@@ -1,12 +1,12 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26114.2
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{CD5E9CC7-853F-4CC8-BCC1-903046E6AC6B}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BitGo", "src\BitGo\BitGo.xproj", "{BE24B78C-9020-4671-B3B1-69D03C9849F5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitGo", "src\BitGo\BitGo.csproj", "{BE24B78C-9020-4671-B3B1-69D03C9849F5}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BitGo.TestConsole", "src\BitGo.TestConsole\BitGo.TestConsole.xproj", "{105E4180-F654-4607-BA3F-9165F486D4C5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitGo.TestConsole", "src\BitGo.TestConsole\BitGo.TestConsole.csproj", "{105E4180-F654-4607-BA3F-9165F486D4C5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B4E9B3CC-FB6B-4AFC-8BB1-D70303039560}"
 	ProjectSection(SolutionItems) = preProject

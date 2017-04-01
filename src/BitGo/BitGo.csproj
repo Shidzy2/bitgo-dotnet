@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>BitGo API Client Class Library</Description>
+    <Copyright>Copyright © PlayHub 2017</Copyright>
+    <AssemblyTitle>BitGo API Client</AssemblyTitle>
+    <VersionPrefix>0.1.1</VersionPrefix>
+    <Authors>PlayHub</Authors>
+    <TargetFrameworks>netstandard1.6</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>BitGo</AssemblyName>
+    <PackageId>BitGo</PackageId>
+    <PackageTags>BitGo;Bitcoin;Api;SDK</PackageTags>
+    <PackageReleaseNotes>Initial Version</PackageReleaseNotes>
+    <PackageIconUrl>https://www.bitgo.com/api/images/logo.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/playhub/bitgo-dotnet</PackageProjectUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/playhub/bitgo-dotnet/master/LICENSE.txt</PackageLicenseUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/playhub/bitgo-dotnet.git</RepositoryUrl>
+    <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.6' ">1.6.0</NetStandardImplicitPackageVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NBitcoin" Version="3.0.0.62" />
+    <PackageReference Include="CoreCompat.BouncyCastle" Version="1.8.1-beta003" />
+    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
+    <PackageReference Include="System.Net.Http" Version="4.1.1" />
+    <PackageReference Include="System.Security.SecureString" Version="4.0.0" />
+    <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.2.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+</Project>
