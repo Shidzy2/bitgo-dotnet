@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Security;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -14,7 +12,6 @@ using System.Runtime.InteropServices;
 using NBitcoin;
 using BitGo.Helpers.Sjcl;
 using System.Net.Http.Headers;
-using System.Security.Cryptography;
 using BitGo.Exceptions;
 using BitGo.Services;
 
